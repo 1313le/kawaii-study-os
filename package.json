@@ -1,0 +1,51 @@
+{
+  "name": "kawaii-study-os",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "kawaii 的个人学习路线与学习记录站",
+  "scripts": {
+    "build": "node tools/build.js",
+    "start": "node tools/build.js && node tools/serve.js",
+    "check": "node tools/build.js",
+    "test:markdown": "node --test tools/markdown.test.mjs",
+    "test:auth": "node --test tools/auth.test.mjs",
+    "test:store": "node --test tools/note-store.test.mjs",
+    "test:taxonomy": "node --test tools/taxonomy.test.mjs",
+    "test:taxonomy-ui": "node --test tools/taxonomy-ui.test.mjs",
+    "test:experience": "node --test tools/write-experience.test.mjs",
+    "test:mindmap": "node --test tools/mindmap.test.mjs",
+    "test:resources": "node --test tools/resources.test.mjs",
+    "test:float": "node --test tools/float-desk.test.mjs",
+    "test:api": "node --test tools/write-api.test.mjs",
+    "test:write": "node --test tools/write-desk.test.mjs",
+    "test:reading": "node --test tools/note-reading.test.mjs",
+    "test:lab": "node --test tools/note-lab.test.mjs",
+    "test:scenes": "node --test tools/scenes.test.mjs",
+    "test:shell": "node --test tools/site-shell.test.mjs",
+    "test:blog": "node --test tools/blog-shell.test.mjs",
+    "test:live": "node --test tools/live.test.mjs",
+    "test:emblem": "node --test tools/emblem.test.mjs",
+    "test": "npm run test:markdown && npm run test:auth && npm run test:metrics && npm run test:store && npm run test:taxonomy && npm run test:taxonomy-ui && npm run test:api && npm run test:write && npm run test:experience && npm run test:mindmap && npm run test:resources && npm run test:float && npm run test:covers && npm run test:motion && npm run test:agent && npm run test:reading && npm run test:lab && npm run test:scenes && npm run test:shell && npm run test:blog && npm run test:live && npm run test:emblem && npm run test:bounds",
+    "test:bounds": "node --test tools/visual-bounds.test.mjs",
+    "test:covers": "node --test tools/covers.test.mjs",
+    "test:agent": "node --test tools/agent.test.mjs",
+    "test:motion": "node --test tools/motion.test.mjs",
+    "test:metrics": "node --test tools/metrics.test.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.65.0"
+  },
+  "dependencies": {
+    "@mdit/plugin-katex": "^1.1.5",
+    "htmlparser2": "^12.0.0",
+    "markdown-it": "^15.0.3",
+    "markdown-it-deflist": "^4.0.0",
+    "markdown-it-footnote": "^4.0.0",
+    "markdown-it-mark": "^4.0.0",
+    "markdown-it-sub": "^2.0.0",
+    "markdown-it-sup": "^2.0.0",
+    "markdown-it-task-lists": "^2.1.1",
+    "sanitize-html": "^2.18.1"
+  }
+}

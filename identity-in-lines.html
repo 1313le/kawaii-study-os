@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Identity, in lines.</title>
+<style>
+  :root {
+    --paper: #f4f3ef;
+    --ink: #17181a;
+    --muted: #6f716c;
+    --hairline: rgba(32, 34, 32, 0.12);
+    --radius: 17px;
+    --gap: 19px;
+    --ease: cubic-bezier(0.22, 0.61, 0.24, 1);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 34px 24px 64px;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .topbar__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .topbar__glyph {
+    width: 14px;
+    height: 14px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    position: relative;
+  }
+
+  .topbar__glyph::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+  }
+
+  .motion {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 4px;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .motion__track {
+    width: 40px;
+    height: 22px;
+    border: 1px solid rgba(32, 34, 32, 0.32);
+    border-radius: 12px;
+    position: relative;
+    transition: background 300ms var(--ease), border-color 300ms var(--ease);
+  }
+
+  .motion__knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: rgba(32, 34, 32, 0.42);
+    transition: transform 300ms var(--ease), background 300ms var(--ease);
+  }
+
+  .motion[aria-pressed="true"] .motion__track {
+    background: rgba(32, 34, 32, 0.9);
+    border-color: rgba(32, 34, 32, 0.9);
+  }
+
+  .motion[aria-pressed="true"] .motion__knob {
+    background: #f7f6f2;
+    transform: translateX(18px);
+  }
+
+  .motion:focus-visible {
+    outline: 2px solid #2152e7;
+    outline-offset: 4px;
+  }
+
+  .intro {
+    margin-top: clamp(48px, 7vw, 86px);
+  }
+
+  .title {
+    margin: 0 0 14px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 400;
+    font-size: clamp(38px, 4.6vw, 57px);
+    line-height: 1.02;
+    letter-spacing: -0.032em;
+  }
+
+  .lede {
+    margin: 0 0 clamp(34px, 4.4vw, 52px);
+    max-width: 48ch;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gap);
+  }
+
+  .card {
+    position: relative;
+    border-radius: var(--radius);
+    outline: none;
+  }
+
+  .card__plate {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    border: 1px solid var(--hairline);
+    opacity: 0.7;
+    transform: translateY(6px);
+    transition: transform 300ms ease-out, opacity 300ms ease-out;
+    pointer-events: none;
+  }
+
+  .card:hover .card__plate,
+  .card:focus-visible .card__plate {
+    transform: translateY(12px);
+    opacity: 1;
+  }
+
+  .card__body {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 12px;
+    aspect-ratio: 0.7;
+    min-height: 460px;
+    padding: 20px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    transform: translateY(0);
+    transition: transform 300ms ease-out;
+  }
+
+  .card:hover .card__body,
+  .card:focus-visible .card__body {
+    transform: translateY(-4px);
+  }
+
+  .card:focus-visible .card__body {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  .card__top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 36px;
+  }
+
+  .card__mini {
+    width: 36px;
+    height: 36px;
+    display: block;
+  }
+
+  .card__name {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.72;
+  }
+
+  .card__mark {
+    position: relative;
+    min-height: 0;
+  }
+
+  .card__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: manipulation;
+  }
+
+  .card__bottom {
+    display: grid;
+    gap: 14px;
+    align-content: end;
+  }
+
+  .card__tagline {
+    margin: 0;
+    font-size: clamp(27px, 2.4vw, 37px);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+
+  .card__reveal {
+    justify-self: start;
+    min-height: 44px;
+    padding: 10px 2px;
+    border: 0;
+    border-bottom: 1px solid currentColor;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: opacity 200ms var(--ease);
+  }
+
+  .card__reveal:hover { opacity: 0.62; }
+
+  .card__reveal:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+
+  .card[data-brand="apple"] .card__body { background: #eeeeeb; color: #202220; }
+  .card[data-brand="google"] .card__body { background: #2152e7; color: #c2dcff; }
+  .card[data-brand="tesla"] .card__body { background: #111212; color: #ec353e; }
+
+  .card[data-brand="apple"] .card__plate { background: #d1d1cf; }
+  .card[data-brand="google"] .card__plate { background: #6f8df1; }
+  .card[data-brand="tesla"] .card__plate { background: #4a4b4a; }
+
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px 24px;
+    margin-top: clamp(40px, 5vw, 64px);
+    padding-top: 18px;
+    border-top: 1px solid var(--hairline);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  dialog.source {
+    width: min(680px, calc(100vw - 32px));
+    max-height: min(80vh, 720px);
+    padding: 0;
+    border: 1px solid rgba(32, 34, 32, 0.18);
+    border-radius: 14px;
+    background: #fbfaf7;
+    color: var(--ink);
+  }
+
+  dialog.source::backdrop {
+    background: rgba(23, 24, 26, 0.42);
+  }
+
+  .source__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .source__title {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+
+  .source__close {
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(32, 34, 32, 0.18);
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .source__close:focus-visible {
+    outline: 2px solid #2152e7;
+    outline-offset: 2px;
+  }
+
+  .source__body {
+    padding: 16px 18px 22px;
+    overflow: auto;
+  }
+
+  .source__meta {
+    margin: 0 0 10px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .source__path {
+    margin: 0;
+    padding: 14px;
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    background: #f1f0eb;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 11.5px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+    user-select: all;
+  }
+
+  .fallback {
+    margin: 40px auto;
+    max-width: 52ch;
+    padding: 18px;
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .fallback[hidden] { display: none; }
+
+  @media (max-width: 650px) {
+    .cards { grid-template-columns: 1fr; }
+    .card__body { aspect-ratio: auto; min-height: 520px; }
+    .title { letter-spacing: -0.02em; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card__plate,
+    .card__body,
+    .motion__track,
+    .motion__knob,
+    .card__reveal {
+      transition-duration: 1ms;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="topbar">
+    <span class="topbar__brand"><span class="topbar__glyph" aria-hidden="true"></span>StyleKit / Visual studies</span>
+    <button class="motion" id="motion" type="button" aria-pressed="true">
+      <span class="motion__track" aria-hidden="true"><span class="motion__knob"></span></span>
+      <span>Motion</span>
+    </button>
+  </header>
+
+  <section class="intro">
+    <h1 class="title">Identity, in lines.</h1>
+    <p class="lede">Move through a familiar mark. Find the structure beneath the surface.</p>
+  </section>
+
+  <div class="fallback" id="fallback" hidden>
+    This study needs Canvas 2D and Path2D. Your browser does not expose them, so the line field stays off.
+  </div>
+
+  <section class="cards" id="cards" aria-label="Brand line studies"></section>
+
+  <footer class="foot">
+    <span>A study of recognition and reconstruction.</span>
+    <span>One path. A field of light. Four line weights.</span>
+  </footer>
+</main>
+
+<dialog class="source" id="source" aria-labelledby="source-title">
+  <div class="source__head">
+    <h2 class="source__title" id="source-title">Source</h2>
+    <button class="source__close" id="source-close" type="button" aria-label="Close source">×</button>
+  </div>
+  <div class="source__body">
+    <p class="source__meta" id="source-meta"></p>
+    <p class="source__path" id="source-path"></p>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  "use strict";
+
+  var BRANDS = [
+    {
+      id: "apple",
+      name: "Apple",
+      tagline: "Think different.",
+      bg: "#eeeeeb",
+      line: "#202220",
+      detect: "#267dff",
+      seed: 3,
+      scale: 0.82,
+      path: "M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
+    },
+    {
+      id: "google",
+      name: "Google",
+      tagline: "Find your next possibility.",
+      bg: "#2152e7",
+      line: "#c2dcff",
+      detect: "#91dcff",
+      seed: 29,
+      scale: 0.79,
+      path: "M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
+    },
+    {
+      id: "tesla",
+      name: "Tesla",
+      tagline: "Accelerate the future.",
+      bg: "#111212",
+      line: "#ec353e",
+      detect: "#4eaeff",
+      seed: 51,
+      scale: 0.81,
+      path: "M12 5.362l2.475-3.026s4.245.09 8.471 2.054c-1.082 1.636-3.231 2.438-3.231 2.438-.146-1.439-1.154-1.79-4.354-1.79L12 24 8.619 5.034c-3.18 0-4.188.354-4.335 1.792 0 0-2.146-.795-3.229-2.43C5.28 2.431 9.525 2.34 9.525 2.34L12 5.362l-.004.002H12v-.002zm0-3.899c3.415-.03 7.326.528 11.328 2.28.535-.968.672-1.395.672-1.395C19.625.612 15.528.015 12 0 8.472.015 4.375.61 0 2.349c0 0 .195.525.672 1.396C4.674 1.989 8.585 1.435 12 1.46v.003z"
+    },
+    {
+      id: "kawaii",
+      name: "kawaii / STUDY OS",
+      tagline: "Write it. Map it. Repeat.",
+      bg: "#2152e7",
+      line: "#c2dcff",
+      detect: "#91dcff",
+      seed: 73,
+      scale: 0.8,
+      path: "M0.45 2.95 L1.13 5.64 L2.49 7.93 L2.04 8.61 L2.49 9.27 L1.36 9.97 L2.04 10.43 L2.49 12.21 L0.91 13.8 L2.69 12.89 L2.72 14.48 L1.36 17.91 L0.68 21.96 L0.23 21.76 L0.0 22.41 L0.23 21.96 L0.45 22.41 L22.64 22.41 L21.53 19.24 L23.55 22.41 L21.96 19.47 L21.73 17.23 L21.28 17.88 L20.83 13.15 L22.64 13.57 L21.28 12.44 L21.28 11.33 L21.73 11.53 L21.51 10.65 L22.41 10.4 L21.73 9.75 L22.64 9.29 L21.99 9.29 L21.73 8.39 L23.77 5.41 L24.0 3.4 L18.36 4.08 L16.29 2.27 L14.03 1.59 L8.61 1.81 L6.12 3.17 L5.87 3.85 Z"
+    }
+  ];
+
+  var GRID = 60;
+  var SEGMENTS = 30;
+  var SAMPLE_PX = 5;
+  var SAMPLE_SIZE = GRID * SAMPLE_PX;
+  var THRESHOLDS = [0.12, 0.42, 0.89];
+  var WIDTHS = [0.38, 1.12, 2.28, 3.8];
+  var ALPHAS = [0.15, 0.64, 0.93, 1];
+  var GAP = 0.7;
+
+  var stats = window.__study = {
+    samples: 0,
+    cards: [],
+    animating: false,
+    dpr: window.devicePixelRatio || 1,
+    visibleBoxes: 0
+  };
+
+  var canvasSupported = (function () {
+    try {
+      var c = document.createElement("canvas");
+      return !!(c.getContext && c.getContext("2d") && window.Path2D);
+    } catch (error) {
+      return false;
+    }
+  })();
+
+  if (!canvasSupported) {
+    document.getElementById("fallback").hidden = false;
+    return;
+  }
+
+  /* ---------- deterministic noise ---------- */
+
+  var NOISE_SIZE = 128;
+  var noiseGrid = new Float32Array(NOISE_SIZE * NOISE_SIZE);
+  (function seedNoise() {
+    var state = 7319 >>> 0;
+    for (var i = 0; i < noiseGrid.length; i += 1) {
+      state ^= state << 13;
+      state >>>= 0;
+      state ^= state >>> 17;
+      state ^= state << 5;
+      state >>>= 0;
+      noiseGrid[i] = (state / 4294967295) * 2 - 1;
+    }
+  })();
+
+  function smooth(t) {
+    return t * t * (3 - 2 * t);
+  }
+
+  function noiseAt(x, y) {
+    var x0 = Math.floor(x);
+    var y0 = Math.floor(y);
+    var tx = smooth(x - x0);
+    var ty = smooth(y - y0);
+    var xa = ((x0 % NOISE_SIZE) + NOISE_SIZE) % NOISE_SIZE;
+    var ya = ((y0 % NOISE_SIZE) + NOISE_SIZE) % NOISE_SIZE;
+    var xb = (xa + 1) % NOISE_SIZE;
+    var yb = (ya + 1) % NOISE_SIZE;
+    var v00 = noiseGrid[ya * NOISE_SIZE + xa];
+    var v10 = noiseGrid[ya * NOISE_SIZE + xb];
+    var v01 = noiseGrid[yb * NOISE_SIZE + xa];
+    var v11 = noiseGrid[yb * NOISE_SIZE + xb];
+    var top = v00 + (v10 - v00) * tx;
+    var bottom = v01 + (v11 - v01) * tx;
+    return top + (bottom - top) * ty;
+  }
+
+  /* ---------- one-time sampling ---------- */
+
+  function sampleBrand(brand) {
+    var canvas = document.createElement("canvas");
+    canvas.width = SAMPLE_SIZE;
+    canvas.height = SAMPLE_SIZE;
+    var ctx = canvas.getContext("2d", { willReadFrequently: true });
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, SAMPLE_SIZE, SAMPLE_SIZE);
+    var path = new Path2D(brand.path);
+    var scale = (SAMPLE_SIZE * brand.scale) / 24;
+    ctx.save();
+    ctx.translate(SAMPLE_SIZE / 2, SAMPLE_SIZE / 2);
+    ctx.scale(scale, scale);
+    ctx.translate(-12, -12);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill(path);
+    ctx.restore();
+
+    var pixels = ctx.getImageData(0, 0, SAMPLE_SIZE, SAMPLE_SIZE).data;
+    var table = new Float32Array(GRID * GRID);
+    for (var gy = 0; gy < GRID; gy += 1) {
+      for (var gx = 0; gx < GRID; gx += 1) {
+        var sum = 0;
+        for (var sy = 0; sy < SAMPLE_PX; sy += 1) {
+          var row = (gy * SAMPLE_PX + sy) * SAMPLE_SIZE;
+          for (var sx = 0; sx < SAMPLE_PX; sx += 1) {
+            var i = (row + gx * SAMPLE_PX + sx) * 4;
+            sum += (0.2126 * pixels[i] + 0.7152 * pixels[i + 1] + 0.0722 * pixels[i + 2]) / 255;
+          }
+        }
+        table[gy * GRID + gx] = sum / (SAMPLE_PX * SAMPLE_PX);
+      }
+    }
+
+    canvas.width = 0;
+    canvas.height = 0;
+    ctx = null;
+    pixels = null;
+    stats.samples += 1;
+    return table;
+  }
+
+  /* ---------- card ---------- */
+
+  function Card(host, brand) {
+    this.brand = brand;
+    this.table = sampleBrand(brand);
+    this.el = host;
+    this.canvas = host.querySelector(".card__canvas");
+    this.ctx = this.canvas.getContext("2d");
+    this.mini = host.querySelector(".card__mini");
+    this.miniCtx = this.mini.getContext("2d");
+    this.dpr = 0;
+    this.width = 0;
+    this.height = 0;
+    this.mark = { x: 0, y: 0, size: 0, cell: 0 };
+    this.seg = [];
+    for (var r = 0; r < SEGMENTS; r += 1) {
+      for (var c = 0; c < GRID; c += 1) {
+        this.seg.push({ c: c, r: r, ox: 0, oy: 0, vx: 0, vy: 0, base: 0, tier: 0, adj: 0 });
+      }
+    }
+    this.segments = this.seg.length;
+    this.pulse = 0;
+    this.pointer = { x: 0, y: 0, active: false, moved: 0, lastX: 0, lastY: 0 };
+    this.overlay = 0;
+    this.focused = false;
+    this.hovered = false;
+    this.visible = true;
+    this.boxes = [];
+    this.scanBuf = new Float32Array(GRID * GRID);
+    this.weightBuf = new Float32Array(GRID * GRID);
+    this.integral = new Float64Array((GRID + 1) * (GRID + 1));
+    this.lastScan = 0;
+    this.tableFlat = this.table;
+    this.bind();
+  }
+
+  Card.prototype.bind = function () {
+    var self = this;
+
+    this.el.addEventListener("pointerenter", function (event) {
+      self.hovered = true;
+      self.pointer.active = true;
+      self.setPointer(event);
+      self.pulse = 1;
+      self.pointer.lastX = self.pointer.x;
+      self.pointer.lastY = self.pointer.y;
+      self.updateOverlayTarget();
+    });
+
+    this.el.addEventListener("pointermove", function (event) {
+      self.setPointer(event);
+      var dx = self.pointer.x - self.pointer.lastX;
+      var dy = self.pointer.y - self.pointer.lastY;
+      if (dx * dx + dy * dy > 2.25) {
+        self.pulse = 1;
+        self.pointer.lastX = self.pointer.x;
+        self.pointer.lastY = self.pointer.y;
+      }
+      self.pointer.active = true;
+    });
+
+    this.el.addEventListener("pointerleave", function () {
+      self.hovered = false;
+      self.pointer.active = false;
+      self.updateOverlayTarget();
+    });
+
+    this.el.addEventListener("pointerdown", function (event) {
+      self.setPointer(event);
+      self.pulse = 1;
+      self.pointer.active = true;
+      self.hovered = true;
+      self.updateOverlayTarget();
+    });
+
+    this.el.addEventListener("focusin", function () {
+      self.focused = true;
+      self.updateOverlayTarget();
+    });
+
+    this.el.addEventListener("focusout", function () {
+      self.focused = false;
+      self.updateOverlayTarget();
+    });
+  };
+
+  Card.prototype.setPointer = function (event) {
+    var rect = this.el.getBoundingClientRect();
+    this.pointer.x = event.clientX - rect.left;
+    this.pointer.y = event.clientY - rect.top;
+  };
+
+  Card.prototype.updateOverlayTarget = function () {
+    this.overlayTarget = this.hovered || this.focused ? 1 : 0;
+  };
+
+  Card.prototype.layout = function () {
+    var rect = this.canvas.getBoundingClientRect();
+    var dpr = window.devicePixelRatio || 1;
+    if (rect.width !== this.width || rect.height !== this.height || dpr !== this.dpr) {
+      this.width = rect.width;
+      this.height = rect.height;
+      this.dpr = dpr;
+      this.canvas.width = Math.max(1, Math.round(rect.width * dpr));
+      this.canvas.height = Math.max(1, Math.round(rect.height * dpr));
+      this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var size = Math.min(rect.width, rect.height);
+      this.mark = {
+        x: (rect.width - size) / 2,
+        y: (rect.height - size) / 2,
+        size: size,
+        cell: size / GRID
+      };
+      this.layoutMini();
+    } else if (window.devicePixelRatio !== stats.dpr) {
+      stats.dpr = window.devicePixelRatio;
+    }
+  };
+
+  Card.prototype.layoutMini = function () {
+    var box = this.mini.getBoundingClientRect();
+    var dpr = window.devicePixelRatio || 1;
+    this.mini.width = Math.max(1, Math.round(box.width * dpr));
+    this.mini.height = Math.max(1, Math.round(box.height * dpr));
+    var ctx = this.miniCtx;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    this.drawMini(ctx, box.width, box.height);
+  };
+
+  Card.prototype.drawMini = function (ctx, w, h) {
+    ctx.clearRect(0, 0, w, h);
+    var cols = 14;
+    var rows = 14;
+    var cell = Math.min(w, h) / cols;
+    var originX = (w - cell * cols) / 2;
+    var originY = (h - cell * rows) / 2;
+    var groups = [[], [], [], []];
+    for (var c = 0; c < cols; c += 1) {
+      for (var r = 0; r < rows; r += 1) {
+        var sum = 0;
+        var count = 0;
+        var block = GRID / cols;
+        for (var yy = 0; yy < block; yy += 1) {
+          for (var xx = 0; xx < block; xx += 1) {
+            var gx = Math.min(GRID - 1, Math.floor(c * block) + xx);
+            var gy = Math.min(GRID - 1, Math.floor(r * block) + yy);
+            sum += this.table[gy * GRID + gx];
+            count += 1;
+          }
+        }
+        var value = sum / count;
+        var tier = value >= THRESHOLDS[2] ? 3 : value >= THRESHOLDS[1] ? 2 : value >= THRESHOLDS[0] ? 1 : 0;
+        groups[tier].push(originX + (c + 0.5) * cell, originY + r * cell + cell * 0.12);
+      }
+    }
+    for (var t = 0; t < 4; t += 1) {
+      if (!groups[t].length) continue;
+      ctx.beginPath();
+      for (var i = 0; i < groups[t].length; i += 2) {
+        ctx.moveTo(groups[t][i], groups[t][i + 1]);
+        ctx.lineTo(groups[t][i], groups[t][i + 1] + cell * 0.76);
+      }
+      ctx.lineWidth = Math.max(0.35, WIDTHS[t] * (cell / 5.25));
+      ctx.strokeStyle = this.brand.line;
+      ctx.globalAlpha = ALPHAS[t];
+      ctx.lineCap = "butt";
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  };
+
+  Card.prototype.stepSprings = function (dt) {
+    var pulse = this.pulse;
+    var radius = this.mark.size / 4;
+    var cell = this.mark.cell;
+    var active = pulse > 0.002;
+    var i;
+    if (!active) {
+      var dirty = false;
+      for (i = 0; i < this.seg.length; i += 1) {
+        if (this.seg[i].ox !== 0 || this.seg[i].oy !== 0 || this.seg[i].vx !== 0 || this.seg[i].vy !== 0) {
+          dirty = true;
+          break;
+        }
+      }
+      if (!dirty) return;
+    }
+    var px = this.pointer.x;
+    var py = this.pointer.y;
+    var pointerOn = this.pointer.active && active;
+    var steps = Math.max(1, Math.ceil(dt / (1 / 30)));
+    var h = dt / steps;
+    for (var s = 0; s < steps; s += 1) {
+      for (i = 0; i < this.seg.length; i += 1) {
+        var seg = this.seg[i];
+        var x = this.mark.x + (seg.c + 0.5) * cell;
+        var y = this.mark.y + seg.r * 2 * cell + cell;
+        var tx = 0;
+        var ty = 0;
+        if (pointerOn) {
+          var dx = px - x;
+          var dy = py - y;
+          var distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < radius) {
+            var falloff = 1 - distance / radius;
+            var force = falloff * falloff * pulse * 25;
+            if (distance > 0.0001) {
+              tx = (dx / distance) * force;
+              ty = (dy / distance) * force * 0.58;
+            }
+          }
+        }
+        var ax = (tx - seg.ox) * 145 - seg.vx * 19;
+        var ay = (ty - seg.oy) * 145 - seg.vy * 19;
+        seg.vx += ax * h;
+        seg.vy += ay * h;
+        seg.ox += seg.vx * h;
+        seg.oy += seg.vy * h;
+      }
+    }
+  };
+
+  Card.prototype.scan = function (time) {
+    var buf = this.scanBuf;
+    var weight = this.weightBuf;
+    buf.fill(0);
+    weight.fill(0);
+    var cell = this.mark.cell;
+    var i;
+    for (i = 0; i < this.seg.length; i += 1) {
+      var seg = this.seg[i];
+      var v = seg.adj;
+      if (v <= 0.001) continue;
+      var gx = (this.mark.x + (seg.c + 0.5) * cell + seg.ox - this.mark.x) / cell;
+      var gy = (this.mark.y + seg.r * 2 * cell + cell + seg.oy - this.mark.y) / cell;
+      var x0 = Math.floor(gx);
+      var y0 = Math.floor(gy);
+      var fx = gx - x0;
+      var fy = gy - y0;
+      for (var dy = 0; dy < 2; dy += 1) {
+        for (var dx = 0; dx < 2; dx += 1) {
+          var cx = x0 + dx;
+          var cy = y0 + dy;
+          if (cx < 0 || cy < 0 || cx >= GRID || cy >= GRID) continue;
+          var w = (dx ? fx : 1 - fx) * (dy ? fy : 1 - fy);
+          buf[cy * GRID + cx] += v * w;
+          weight[cy * GRID + cx] += w;
+        }
+      }
+    }
+    for (i = 0; i < buf.length; i += 1) {
+      if (weight[i] > 0) buf[i] /= weight[i];
+    }
+
+    var integral = this.integral;
+    integral.fill(0);
+    for (var y = 0; y < GRID; y += 1) {
+      var rowSum = 0;
+      for (var x = 0; x < GRID; x += 1) {
+        rowSum += buf[y * GRID + x];
+        integral[(y + 1) * (GRID + 1) + (x + 1)] = integral[y * (GRID + 1) + (x + 1)] + rowSum;
+      }
+    }
+
+    function mean(x0, y0, x1, y1) {
+      return (
+        integral[y1 * (GRID + 1) + x1] -
+        integral[y0 * (GRID + 1) + x1] -
+        integral[y1 * (GRID + 1) + x0] +
+        integral[y0 * (GRID + 1) + x0]
+      ) / ((x1 - x0) * (y1 - y0));
+    }
+
+    var candidates = [];
+    for (var cy = 3; cy <= GRID - 4; cy += 1) {
+      for (var cx = 3; cx <= GRID - 4; cx += 1) {
+        var value = mean(cx - 3, cy - 3, cx + 4, cy + 4);
+        if (value > 0.02) candidates.push({ x: cx, y: cy, score: value });
+      }
+    }
+    if (!candidates.length) return [];
+    candidates.sort(function (a, b) { return b.score - a.score; });
+    var best = candidates[0].score;
+    if (best < 0.04) return [];
+
+    var previous = this.boxes;
+    var kept = [];
+    var minDistance = 16;
+    for (var i2 = 0; i2 < candidates.length; i2 += 1) {
+      var candidate = candidates[i2];
+      if (candidate.score < best * 0.48) break;
+      var score = candidate.score;
+      for (var p = 0; p < previous.length; p += 1) {
+        var dx2 = candidate.x - previous[p].gx;
+        var dy2 = candidate.y - previous[p].gy;
+        score += 0.025 * Math.exp(-(dx2 * dx2 + dy2 * dy2) / 128);
+      }
+      candidate.rank = score;
+      var tooClose = false;
+      for (var k = 0; k < kept.length; k += 1) {
+        var ddx = candidate.x - kept[k].x;
+        var ddy = candidate.y - kept[k].y;
+        if (ddx * ddx + ddy * ddy < minDistance * minDistance) {
+          tooClose = true;
+          break;
+        }
+      }
+      if (!tooClose) kept.push(candidate);
+      if (kept.length >= 3) break;
+    }
+    if (kept.length < 2) {
+      minDistance = 12;
+      kept = [];
+      for (var i3 = 0; i3 < candidates.length; i3 += 1) {
+        var cand = candidates[i3];
+        if (cand.score < best * 0.48) break;
+        var close = false;
+        for (var k2 = 0; k2 < kept.length; k2 += 1) {
+          var ddx2 = cand.x - kept[k2].x;
+          var ddy2 = cand.y - kept[k2].y;
+          if (ddx2 * ddx2 + ddy2 * ddy2 < minDistance * minDistance) {
+            close = true;
+            break;
+          }
+        }
+        if (!close) kept.push(cand);
+        if (kept.length >= 3) break;
+      }
+    }
+
+    var next = [];
+    var used = [];
+    for (var q = 0; q < kept.length; q += 1) {
+      var target = kept[q];
+      var match = null;
+      for (var s2 = 0; s2 < previous.length; s2 += 1) {
+        if (used[s2]) continue;
+        var mx = target.x - previous[s2].gx;
+        var my = target.y - previous[s2].gy;
+        if (mx * mx + my * my <= 144) {
+          match = previous[s2];
+          used[s2] = true;
+          break;
+        }
+      }
+      if (match) {
+        match.gx = target.x;
+        match.gy = target.y;
+        match.leaving = false;
+        next.push(match);
+      } else {
+        next.push({
+          gx: target.x,
+          gy: target.y,
+          x: target.x,
+          y: target.y,
+          vx: 0,
+          vy: 0,
+          alpha: 0,
+          leaving: false
+        });
+      }
+    }
+    for (var u = 0; u < previous.length; u += 1) {
+      if (!used[u]) {
+        previous[u].leaving = true;
+        next.push(previous[u]);
+      }
+    }
+    return next.slice(0, 3);
+  };
+
+  Card.prototype.stepBoxes = function (dt) {
+    var steps = Math.max(1, Math.ceil(dt / (1 / 120)));
+    var h = dt / steps;
+    for (var i = 0; i < this.boxes.length; i += 1) {
+      var box = this.boxes[i];
+      if (box.leaving) {
+        box.alpha += (0 - box.alpha) * (1 - Math.exp(-16 * dt));
+      } else {
+        box.alpha += (1 - box.alpha) * (1 - Math.exp(-16 * dt));
+        for (var s = 0; s < steps; s += 1) {
+          var ax = (box.gx - box.x) * 144 - box.vx * 24;
+          var ay = (box.gy - box.y) * 144 - box.vy * 24;
+          box.vx += ax * h;
+          box.vy += ay * h;
+          box.x += box.vx * h;
+          box.y += box.vy * h;
+        }
+      }
+    }
+    this.boxes = this.boxes.filter(function (box) {
+      return !(box.leaving && box.alpha < 0.04);
+    });
+  };
+
+  Card.prototype.render = function (time, dt, now) {
+    var ctx = this.ctx;
+    ctx.clearRect(0, 0, this.width, this.height);
+    var cell = this.mark.cell;
+    var ox = this.mark.x;
+    var oy = this.mark.y;
+
+    var groups = [[], [], [], []];
+    for (var i = 0; i < this.seg.length; i += 1) {
+      var seg = this.seg[i];
+      var a = this.table[(seg.r * 2) * GRID + seg.c];
+      var b = this.table[(seg.r * 2 + 1) * GRID + seg.c];
+      var brightness = (a + b) / 2;
+      var noise = noiseAt(seg.c * 0.15 + this.brand.seed, seg.r * 0.16 - time * 0.17);
+      var adjusted = brightness * 0.94 + noise * 0.12 * (0.25 + brightness * 0.75);
+      seg.adj = adjusted;
+      var tier = adjusted >= THRESHOLDS[2] ? 3 : adjusted >= THRESHOLDS[1] ? 2 : adjusted >= THRESHOLDS[0] ? 1 : 0;
+      seg.tier = tier;
+      var x = ox + (seg.c + 0.5) * cell + seg.ox;
+      var y = oy + seg.r * 2 * cell;
+      groups[tier].push(x, y + GAP / 2, y + cell * 2 - GAP / 2);
+    }
+
+    for (var t = 0; t < 4; t += 1) {
+      var group = groups[t];
+      if (!group.length) continue;
+      ctx.beginPath();
+      for (var g = 0; g < group.length; g += 3) {
+        ctx.moveTo(group[g], group[g + 1]);
+        ctx.lineTo(group[g], group[g + 2]);
+      }
+      ctx.lineWidth = WIDTHS[t] * (cell / 5.25);
+      ctx.strokeStyle = this.brand.line;
+      ctx.globalAlpha = ALPHAS[t];
+      ctx.lineCap = "butt";
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    this.stepBoxes(dt);
+    this.renderOverlay(ctx, cell, ox, oy);
+  };
+
+  Card.prototype.renderOverlay = function (ctx, cell, ox, oy) {
+    if (this.overlay <= 0.01 && !this.boxes.length) return;
+    var alpha = this.overlay;
+    ctx.save();
+    for (var i = 0; i < this.boxes.length; i += 1) {
+      var box = this.boxes[i];
+      var a = Math.min(alpha, box.alpha);
+      if (a <= 0.01) continue;
+      var x = ox + (box.x - 4.5) * cell;
+      var y = oy + (box.y - 4.5) * cell;
+      var size = cell * 9;
+      ctx.globalAlpha = a * 0.07;
+      ctx.fillStyle = this.brand.detect;
+      ctx.fillRect(x, y, size, size);
+      ctx.globalAlpha = a;
+      ctx.strokeStyle = this.brand.detect;
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(x + 0.75, y + 0.75, size - 1.5, size - 1.5);
+      var tick = Math.min(12, size * 0.22);
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(x, y + tick); ctx.lineTo(x, y); ctx.lineTo(x + tick, y);
+      ctx.moveTo(x + size - tick, y); ctx.lineTo(x + size, y); ctx.lineTo(x + size, y + tick);
+      ctx.moveTo(x + size, y + size - tick); ctx.lineTo(x + size, y + size); ctx.lineTo(x + size - tick, y + size);
+      ctx.moveTo(x + tick, y + size); ctx.lineTo(x, y + size); ctx.lineTo(x, y + size - tick);
+      ctx.stroke();
+      var moving = Math.abs(box.vx) + Math.abs(box.vy) > 0.08;
+      var label = moving ? box.x.toFixed(1) + ", " + box.y.toFixed(1) : Math.round(box.x) + ", " + Math.round(box.y);
+      ctx.font = "10px Arial, Helvetica, sans-serif";
+      var tw = ctx.measureText(label).width;
+      var lx = Math.min(Math.max(x + 2, ox + 2), ox + this.mark.size - tw - 8);
+      var ly = Math.max(y - 8, oy + 12);
+      ctx.globalAlpha = a;
+      ctx.fillStyle = this.brand.bg;
+      ctx.fillRect(lx - 3, ly - 10, tw + 6, 14);
+      ctx.fillStyle = this.brand.detect;
+      ctx.fillText(label, lx, ly);
+    }
+    ctx.globalAlpha = alpha * 0.55;
+    ctx.strokeStyle = this.brand.detect;
+    ctx.lineWidth = 1;
+    for (var c = 1; c < this.boxes.length; c += 1) {
+      var a1 = this.boxes[c - 1];
+      var a2 = this.boxes[c];
+      if (a1.leaving || a2.leaving) continue;
+      ctx.globalAlpha = alpha * 0.55 * Math.min(a1.alpha, a2.alpha);
+      ctx.beginPath();
+      ctx.moveTo(ox + a1.x * cell, oy + a1.y * cell);
+      ctx.lineTo(ox + a2.x * cell, oy + a2.y * cell);
+      ctx.stroke();
+    }
+    ctx.restore();
+  };
+
+  /* ---------- page ---------- */
+
+  var host = document.getElementById("cards");
+  var cards = [];
+  var motionButton = document.getElementById("motion");
+  var dialog = document.getElementById("source");
+  var dialogOpen = false;
+  var motionOn = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var lastFrame = 0;
+  var rafId = 0;
+
+  BRANDS.forEach(function (brand) {
+    var article = document.createElement("article");
+    article.className = "card";
+    article.dataset.brand = brand.id;
+    article.tabIndex = 0;
+    article.setAttribute("aria-label", brand.name + " — " + brand.tagline);
+    article.innerHTML =
+      '<div class="card__plate" aria-hidden="true"></div>' +
+      '<div class="card__body">' +
+        '<div class="card__top"><canvas class="card__mini" aria-hidden="true"></canvas><span class="card__name">' + brand.name + '</span></div>' +
+        '<div class="card__mark"><canvas class="card__canvas" aria-hidden="true"></canvas></div>' +
+        '<div class="card__bottom">' +
+          '<p class="card__tagline">' + brand.tagline + '</p>' +
+          '<button class="card__reveal" type="button">Reveal the source →</button>' +
+        '</div>' +
+      '</div>';
+    host.appendChild(article);
+    var card = new Card(article, brand);
+    card.updateOverlayTarget();
+    cards.push(card);
+
+    article.addEventListener("focusin", function () {
+      if (active()) return;
+      card.overlay = 1;
+      card.boxes = card.scan(performance.now() / 1000).map(function (box) {
+        box.alpha = 1;
+        return box;
+      });
+      drawStill(card);
+    });
+
+    article.querySelector(".card__reveal").addEventListener("click", function (event) {
+      event.stopPropagation();
+      openSource(brand);
+    });
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          card.visible = entry.isIntersecting;
+          if (card.visible) schedule();
+          else drawStill(card);
+        });
+      }, { threshold: 0.01 }).observe(article);
+    }
+  });
+
+  function openSource(brand) {
+    document.getElementById("source-title").textContent = brand.name + " · source";
+    document.getElementById("source-meta").textContent = "24 × 24 path · seed " + brand.seed + " · scale " + brand.scale;
+    document.getElementById("source-path").textContent = brand.path;
+    dialogOpen = true;
+    dialog.showModal();
+    stop();
+  }
+
+  document.getElementById("source-close").addEventListener("click", function () {
+    dialog.close();
+  });
+  dialog.addEventListener("close", function () {
+    dialogOpen = false;
+    lastFrame = 0;
+    if (motionOn) schedule();
+  });
+
+  function layoutAll() {
+    cards.forEach(function (card) {
+      card.layout();
+    });
+    if (window.devicePixelRatio !== stats.dpr) stats.dpr = window.devicePixelRatio;
+  }
+
+  function drawStill(card) {
+    card.layout();
+    card.render(0.001, 0.016, performance.now());
+  }
+
+  function stop() {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = 0;
+    stats.animating = false;
+  }
+
+  function schedule() {
+    if (rafId) return;
+    rafId = requestAnimationFrame(loop);
+    stats.animating = true;
+  }
+
+  function active() {
+    return motionOn && !dialogOpen && !document.hidden;
+  }
+
+  function loop(now) {
+    rafId = 0;
+    if (!active()) {
+      stats.animating = false;
+      cards.forEach(drawStill);
+      return;
+    }
+    if (!lastFrame) lastFrame = now;
+    var dt = Math.min(1 / 30, (now - lastFrame) / 1000);
+    if (dt <= 0) dt = 1 / 60;
+    lastFrame = now;
+    var time = now / 1000;
+    var anyVisible = false;
+    cards.forEach(function (card) {
+      if (!card.visible) return;
+      anyVisible = true;
+      card.layout();
+      card.pulse *= Math.exp(-dt * 5.5);
+      card.overlay += ((card.overlayTarget || 0) - card.overlay) * (1 - Math.exp(-16 * dt));
+      card.stepSprings(dt);
+      if (card.overlay > 0.01 && now - card.lastScan >= 100) {
+        card.lastScan = now;
+        card.boxes = card.scan(time);
+      }
+      card.render(time, dt, now);
+    });
+    stats.visibleBoxes = cards.reduce(function (sum, card) {
+      return sum + card.boxes.filter(function (box) { return !box.leaving; }).length;
+    }, 0);
+    if (anyVisible) rafId = requestAnimationFrame(loop);
+    else stats.animating = false;
+  }
+
+  motionButton.setAttribute("aria-pressed", String(motionOn));
+  motionButton.addEventListener("click", function () {
+    motionOn = !motionOn;
+    motionButton.setAttribute("aria-pressed", String(motionOn));
+    lastFrame = 0;
+    if (motionOn) schedule();
+    else {
+      stop();
+      cards.forEach(drawStill);
+    }
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    lastFrame = 0;
+    if (active()) schedule();
+    else {
+      stop();
+      cards.forEach(drawStill);
+    }
+  });
+
+  var resizeObserver = new ResizeObserver(function () {
+    layoutAll();
+    if (!active()) cards.forEach(drawStill);
+  });
+  cards.forEach(function (card) {
+    resizeObserver.observe(card.el);
+  });
+
+  window.addEventListener("resize", function () {
+    layoutAll();
+    if (!active()) cards.forEach(drawStill);
+  });
+
+  if (window.matchMedia) {
+    var dprQuery = null;
+    var watchDpr = function () {
+      if (dprQuery && dprQuery.removeEventListener) dprQuery.removeEventListener("change", onDpr);
+      dprQuery = window.matchMedia("(resolution: " + window.devicePixelRatio + "dppx)");
+      if (dprQuery.addEventListener) dprQuery.addEventListener("change", onDpr);
+    };
+    var onDpr = function () {
+      layoutAll();
+      watchDpr();
+      if (!active()) cards.forEach(drawStill);
+    };
+    watchDpr();
+  }
+
+  layoutAll();
+  lastFrame = 0;
+  if (motionOn) schedule();
+  else cards.forEach(drawStill);
+
+  stats.cards = cards;
+  stats.lines = { columns: GRID, segments: SEGMENTS, widths: WIDTHS.slice(), thresholds: THRESHOLDS.slice() };
+  stats.layout = function () { return cards.map(function (card) { return { table: card.table.length, w: card.width, h: card.height, dpr: card.dpr, cell: card.mark.cell }; }); };
+})();
+</script>
+</body>
+</html>

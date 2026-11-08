@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-skin="pixel" data-fx="on">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>资源库 · kawaii / STUDY OS</title>
+  <meta name="description" content="内置学习资源库：文件、PDF、视频、网站与网盘链接，一处归档、页内查看、一键下载。">
+  <meta name="theme-color" content="#0b0616">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/resources.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/terminal.css">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add("js");
+      try {
+        var skin = localStorage.getItem("kawaii.skin.v1");
+        if (skin === "pixel" || skin === "line") root.setAttribute("data-skin", skin);
+        root.setAttribute("data-fx", localStorage.getItem("kawaii.fx.v1") === "off" ? "off" : "on");
+        var daynight = localStorage.getItem("kawaii.daynight.v1");
+        var hour = new Date().getHours();
+        root.setAttribute("data-daynight", (daynight === "day" || daynight === "night") ? daynight : (hour >= 6 && hour < 18 ? "day" : "night"));
+        var motion = localStorage.getItem("kawaii.motion.v1");
+        if (motion === "full" || motion === "reduced") root.setAttribute("data-motion", motion);
+        if (!sessionStorage.getItem("kawaii.booted")) root.classList.add("boot-on");
+      } catch (error) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/daynight.css">
+</head>
+<body id="top" data-page="resources">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <div class="boot-screen" id="boot-screen" aria-hidden="true">
+    <div class="boot-screen__box">
+      <p class="boot-screen__brand">kawaii / STUDY OS<br>RESOURCE VAULT</p>
+      <p class="boot-screen__line" style="--i:0"><span>[res] mount /files</span><b>OK</b></p>
+      <p class="boot-screen__line" style="--i:1"><span>[res] index links</span><b>OK</b></p>
+      <p class="boot-screen__line" style="--i:2"><span>[res] open viewer</span><b>READY</b></p>
+      <div class="boot-screen__bar"><i></i></div>
+      <p class="boot-screen__hint">CLICK OR PRESS ANY KEY TO SKIP</p>
+    </div>
+  </div>
+
+  <header class="masthead" data-site-header></header>
+
+  <main class="page-main" id="main">
+    <section class="page-hero">
+      <div class="container">
+        <div class="page-hero__inner">
+          <div>
+            <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>RESOURCE VAULT / 资料、书、视频与网盘</p>
+            <h1 class="page-hero__title">资源<em>库</em></h1>
+            <p class="page-hero__lede">把书、数据手册、课程、安装包和网盘链接都塞进同一个抽屉。能在页内看的就在页内看，看不了的一键新窗口；文件直接下载。</p>
+          </div>
+          <div class="page-hero__meta">
+            <p class="page-hero__stat"><strong data-res-total>0</strong> ITEMS</p>
+            <p class="page-hero__stat"><strong data-res-files>0</strong> FILES</p>
+            <p class="page-hero__stat"><strong data-res-category-count>0</strong> CATEGORIES</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="res-intake-section" aria-label="快速添加资源">
+      <div class="container">
+        <div class="res-intake author-only" data-res-intake>
+          <div class="res-intake__copy">
+            <span class="res-intake__label">QUICK ADD / 智能识别</span>
+            <p>把网址粘进来，或把文件 / 链接拖到这页任意位置；会自动抓取标题、类型并给出分类建议。</p>
+          </div>
+          <div class="res-intake__row">
+            <input type="text" data-res-intake-url placeholder="https://… 粘贴网页、视频或网盘链接" aria-label="粘贴资源网址">
+            <button class="btn btn--small btn--primary" type="button" data-res-intake-go>识别并添加</button>
+            <label class="btn btn--small res-intake__file">选择文件
+              <input type="file" data-res-intake-file hidden>
+            </label>
+          </div>
+          <p class="res-intake__status" data-res-intake-status role="status"></p>
+        </div>
+      </div>
+    </section>
+
+    <div class="res-toolbar">
+      <div class="container">
+        <div class="res-toolbar__inner">
+          <label class="search-field">
+            <span class="search-field__prompt" aria-hidden="true">⌕</span>
+            <input type="search" data-res-search placeholder="搜索标题、分类、标签或来源…" aria-label="搜索资源">
+            <span class="search-field__key" aria-hidden="true">/</span>
+          </label>
+          <label class="kind-field">
+            <span class="kind-field__label">KIND</span>
+            <select data-res-kind aria-label="按资源类型筛选">
+              <option value="">全部类型</option>
+              <option value="file">文件</option>
+              <option value="pdf">PDF</option>
+              <option value="video">视频</option>
+              <option value="image">图片</option>
+              <option value="site">网页</option>
+              <option value="netdisk">网盘</option>
+            </select>
+          </label>
+          <label class="kind-field">
+            <span class="kind-field__label">SORT</span>
+            <select data-res-sort aria-label="排序方式">
+              <option value="new">最新添加</option>
+              <option value="title">标题</option>
+              <option value="size">文件大小</option>
+            </select>
+          </label>
+          <span class="logs-toolbar__count" data-res-count>— / — ITEMS</span>
+          <button class="btn btn--small btn--primary author-only" type="button" data-res-add>添加资源</button>
+        </div>
+        <div class="filter-row filter-row--collections" data-res-categories></div>
+        <p class="res-toolbar__mode" data-res-mode hidden></p>
+      </div>
+    </div>
+
+    <section class="section section--tight" aria-label="资源列表">
+      <div class="container">
+        <div class="res-proposals" data-res-proposals hidden></div>
+        <div class="res-grid" data-res-grid></div>
+        <div class="res-empty" data-res-empty hidden>
+          <p class="res-empty__title">VAULT IS EMPTY</p>
+          <p>还没有资源。把你正在读的书、数据手册、课程视频或网盘链接加进来，下次就不用翻收藏夹。</p>
+          <div class="res-empty__actions">
+            <button class="btn btn--primary" type="button" data-res-add>添加第一条</button>
+            <button class="btn" type="button" data-res-quick="数据手册">加一本数据手册</button>
+            <button class="btn" type="button" data-res-quick="视频">加一门视频课</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="res-add" data-res-add-dialog aria-labelledby="res-add-title">
+    <div class="res-add__frame">
+      <header class="res-add__head">
+        <div>
+          <span class="res-add__tag" data-res-add-tag>NEW ENTRY / 新资源</span>
+          <h2 class="res-add__title" id="res-add-title" data-res-add-title>添加资源</h2>
+        </div>
+        <button class="res-add__close" type="button" data-res-add-close aria-label="关闭">×</button>
+      </header>
+
+      <div class="res-add__tabs" role="tablist" aria-label="资源来源">
+        <button type="button" role="tab" data-res-tab="link" aria-selected="true">链接</button>
+        <button type="button" role="tab" data-res-tab="upload" aria-selected="false">上传文件</button>
+      </div>
+
+      <div class="res-add__body">
+        <div class="res-add__pane" data-res-pane="link">
+          <label class="field field--wide">标题
+            <input type="text" data-res-field="title" placeholder="例如：STM32F4 参考手册 RM0090">
+          </label>
+          <label class="field field--wide">链接
+            <input type="url" data-res-field="url" placeholder="https://…（B 站 / YouTube / 网盘 / PDF / 网页）">
+          </label>
+          <label class="field">分类
+            <input type="text" data-res-field="category" list="res-category-options" placeholder="数据手册 / 课程 / 电子书">
+          </label>
+          <datalist id="res-category-options"></datalist>
+          <label class="field">类型
+            <select data-res-field="kind">
+              <option value="">自动识别</option>
+              <option value="file">文件</option>
+              <option value="pdf">PDF</option>
+              <option value="video">视频</option>
+              <option value="image">图片</option>
+              <option value="site">网页</option>
+              <option value="netdisk">网盘</option>
+            </select>
+          </label>
+          <label class="field">提取码
+            <input type="text" data-res-field="code" placeholder="网盘提取码，可留空">
+          </label>
+          <label class="field field--wide">标签
+            <input type="text" data-res-field="tags" placeholder="STM32, 手册, 寄存器（逗号分隔）">
+          </label>
+          <label class="field field--wide">说明
+            <input type="text" data-res-field="note" placeholder="一句话：为什么留它 / 从哪一章开始看">
+          </label>
+        </div>
+
+        <div class="res-add__pane" data-res-pane="upload" hidden>
+          <label class="field field--wide">标题
+            <input type="text" data-res-upload-field="title" placeholder="例如：嵌入式 C 语言实践（第 3 版）">
+          </label>
+          <label class="field field--wide">文件
+            <input type="file" data-res-upload-field="file">
+          </label>
+          <p class="res-add__hint" data-res-upload-hint>支持 PDF、EPUB、压缩包、安装包、视频与图片，单个文件最大 300MB；文件存到 files/，可直接下载。</p>
+          <label class="field">分类
+            <input type="text" data-res-upload-field="category" list="res-category-options" placeholder="电子书 / 工具软件">
+          </label>
+          <label class="field field--wide">标签
+            <input type="text" data-res-upload-field="tags" placeholder="C, 嵌入式, 书（逗号分隔）">
+          </label>
+          <label class="field field--wide">说明
+            <input type="text" data-res-upload-field="note" placeholder="一句话备注">
+          </label>
+        </div>
+      </div>
+
+      <footer class="res-add__foot">
+        <p class="res-add__status" data-res-add-status role="status"></p>
+        <button class="btn btn--small author-only" type="button" data-res-ai>AI 识别分类</button>
+        <button class="btn btn--ghost" type="button" data-res-add-cancel>取消</button>
+        <button class="btn btn--primary" type="button" data-res-add-save data-mode="add">保存</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog class="res-drawer" data-res-view aria-labelledby="res-view-title">
+    <div class="res-drawer__frame">
+      <header class="res-drawer__head">
+        <div class="res-drawer__titles">
+          <span class="res-drawer__kind" data-res-view-kind>RESOURCE</span>
+          <h2 class="res-drawer__title" id="res-view-title" data-res-view-title>资源</h2>
+          <p class="res-drawer__host" data-res-view-host></p>
+        </div>
+        <button class="res-drawer__close" type="button" data-res-view-close aria-label="关闭">×</button>
+      </header>
+      <div class="res-drawer__actions">
+        <a class="btn btn--small btn--primary" data-res-view-open target="_blank" rel="noopener noreferrer">新窗口打开 <span aria-hidden="true">↗</span></a>
+        <a class="btn btn--small" data-res-view-download download hidden>下载文件</a>
+        <button class="btn btn--small" type="button" data-res-view-copy>复制链接</button>
+        <button class="btn btn--small" type="button" data-res-view-code hidden>复制提取码</button>
+        <span class="res-drawer__status" data-res-view-status role="status"></span>
+      </div>
+      <div class="res-drawer__body" data-res-view-body></div>
+    </div>
+  </dialog>
+
+  <div class="res-drop author-only" data-res-drop hidden><span>松开以导入文件 / 链接</span></div>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script src="data/site.js" defer></script>
+  <script src="data/notes.generated.js" defer></script>
+  <script src="assets/js/theme.js" defer></script>
+  <script src="assets/js/motion.js" defer></script>
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/ai.js" defer></script>
+  <script src="assets/js/agent.js" defer></script>
+  <script src="assets/js/ambient.js" defer></script>
+  <script src="assets/js/linefield.js" defer></script>
+  <script src="assets/js/terminal.js" defer></script>
+  <script src="assets/js/auth-gate.js" defer></script>
+  <script src="assets/js/resources.js" defer></script>
+</body>
+</html>

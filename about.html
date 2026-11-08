@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-skin="pixel" data-fx="on">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>关于 · kawaii / STUDY OS</title>
+  <meta name="description" content="关于 kawaii：一个走硬件开发方向的学习者，以及这台用来收集、写作与复盘的学习记录系统。">
+  <meta name="theme-color" content="#0b0616">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/terminal.css">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add("js");
+      try {
+        var skin = localStorage.getItem("kawaii.skin.v1");
+        if (skin === "pixel" || skin === "line") root.setAttribute("data-skin", skin);
+        root.setAttribute("data-fx", localStorage.getItem("kawaii.fx.v1") === "off" ? "off" : "on");
+        var daynight = localStorage.getItem("kawaii.daynight.v1");
+        var hour = new Date().getHours();
+        root.setAttribute("data-daynight", (daynight === "day" || daynight === "night") ? daynight : (hour >= 6 && hour < 18 ? "day" : "night"));
+        var motion = localStorage.getItem("kawaii.motion.v1");
+        if (motion === "full" || motion === "reduced") root.setAttribute("data-motion", motion);
+        if (!sessionStorage.getItem("kawaii.booted")) root.classList.add("boot-on");
+      } catch (error) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/daynight.css">
+</head>
+<body id="top" data-page="about">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <div class="boot-screen" id="boot-screen" aria-hidden="true">
+    <div class="boot-screen__box">
+      <p class="boot-screen__brand">kawaii / STUDY OS<br>ABOUT MODULE</p>
+      <p class="boot-screen__line" style="--i:0"><span>[about] load identity</span><b>OK</b></p>
+      <p class="boot-screen__line" style="--i:1"><span>[about] read build history</span><b>OK</b></p>
+      <p class="boot-screen__line" style="--i:2"><span>[about] open contact channel</span><b>READY</b></p>
+      <div class="boot-screen__bar"><i></i></div>
+      <p class="boot-screen__hint">CLICK OR PRESS ANY KEY TO SKIP</p>
+    </div>
+  </div>
+
+  <header class="masthead" data-site-header></header>
+
+  <main class="page-main" id="main">
+    <section class="about-hero">
+      <div class="container">
+        <div class="about-hero__grid">
+          <div>
+            <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>IDENTITY / 关于这台系统的作者</p>
+            <h1 class="about-hero__title">你好，<br>我是 <em>kawaii</em>。</h1>
+            <p class="about-hero__lede">一个正在往硬件开发方向走的学习者。这个站不是作品集，也不是教程站，而是一台我每天都会打开的学习记录系统：把值得留下的都收进来，写下来，再回头复盘。</p>
+            <dl class="about-hero__facts">
+              <div class="about-fact"><dt>ROLE</dt><dd>硬件开发 / 学习者</dd></div>
+              <div class="about-fact"><dt>FOCUS</dt><dd>电子基础 → 嵌入式 MCU → PCB 实战</dd></div>
+              <div class="about-fact"><dt>METHOD</dt><dd>收集 / 写作 / 导图 / 复盘</dd></div>
+              <div class="about-fact"><dt>STATUS</dt><dd>持续构建中 · BUILD 2026.11</dd></div>
+            </dl>
+            <div class="contact-row" data-socials></div>
+          </div>
+
+          <figure class="portrait-frame">
+            <div class="portrait-frame__bar">
+              <span>PORTRAIT / 001</span>
+              <a class="portrait-frame__jump" href="#live" aria-label="跳到写作直播大屏">
+                <b data-desk-feed-inline>ONLINE</b>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+            <div class="portrait-frame__stage" data-portrait>
+              <img src="assets/img/avatar-catgirl.png" alt="kawaii：黑发猫耳少女的像素肖像" width="800" height="800" decoding="async">
+              <canvas class="portrait-scene" data-portrait-canvas aria-hidden="true"></canvas>
+              <video class="portrait-video" data-portrait-video muted loop playsinline preload="none" poster="assets/img/portrait-poster.webp" data-src="assets/video/portrait-loop.mp4" aria-hidden="true" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
+              <canvas class="portrait-away" data-portrait-away width="192" height="160" aria-hidden="true"></canvas>
+              <canvas class="portrait-live" data-portrait-live width="192" height="160" aria-hidden="true"></canvas>
+            </div>
+            <p class="portrait-live-copy" data-live-copy hidden></p>
+            <figcaption class="portrait-frame__caption">
+              <span>kawaii @ study</span>
+              <span>EST. 2026</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section live-room" id="live" data-live-room aria-labelledby="about-live">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-head__main">
+            <span class="section-index section-index--live" aria-hidden="true">LIVE</span>
+            <div>
+              <h2 class="section-title" id="about-live">我现在写到哪了</h2>
+              <p class="section-en">WRITING LIVE / 光标前四行，实时公开</p>
+            </div>
+          </div>
+          <span class="live-room__status"><i aria-hidden="true"></i><span data-live-room-status>STANDBY</span></span>
+        </div>
+        <div class="live-room__grid">
+          <div class="live-room__copy">
+            <p class="live-room__lede">写作台的 LIVE 默认开启。你看到的不是录播：标题、光标位置和光标前 4 行，每 3 秒同步一次。</p>
+            <ol class="live-room__facts">
+              <li><b>01</b><span>光标行号 / 列号</span></li>
+              <li><b>02</b><span>光标前最后 4 行</span></li>
+              <li><b>03</b><span>45 秒没有心跳就下线</span></li>
+            </ol>
+            <p class="live-room__note">只公开标题和光标前 4 行，不公开全文；关掉写作台或点 LIVE 就停。</p>
+            <a class="btn btn--primary" href="write.html">打开写作台 <span aria-hidden="true">→</span></a>
+          </div>
+          <figure class="live-monitor" data-live-monitor data-live="off">
+            <div class="live-monitor__bar">
+              <span>LIVE MONITOR / 002</span>
+              <b data-live-room-badge>STANDBY</b>
+            </div>
+            <div class="live-monitor__bezel">
+              <div class="live-monitor__screen">
+                <canvas data-live-monitor-canvas width="576" height="480" aria-label="作者写作直播的大屏画面"></canvas>
+                <span class="live-monitor__glass" aria-hidden="true"></span>
+              </div>
+              <span class="live-monitor__led" aria-hidden="true"></span>
+            </div>
+            <figcaption class="live-monitor__foot">
+              <span class="live-monitor__title" data-live-room-title>等待作者上线</span>
+              <span class="live-monitor__meta" data-live-room-meta>写作台 LIVE 默认开启</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" aria-labelledby="about-doing">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-head__main">
+            <span class="section-index" aria-hidden="true">01</span>
+            <div>
+              <h2 class="section-title" id="about-doing">我在做什么</h2>
+              <p class="section-en">WHAT I'M BUILDING / 三件长期的事</p>
+            </div>
+          </div>
+        </div>
+        <div class="about-grid">
+          <article class="about-card">
+            <p class="about-card__label">01 / COLLECT</p>
+            <h3 class="about-card__title">把值得留下的都收进来</h3>
+            <p class="about-card__text">读到好文章截一张图、查到一段资料拖进小电视、想到一句话先记下来。栏目由我自己定义，想学什么就建什么，素材和笔记都归到它该去的地方。</p>
+          </article>
+          <article class="about-card">
+            <p class="about-card__label">02 / LOG</p>
+            <h3 class="about-card__title">为每个卡点留下现场记录</h3>
+            <p class="about-card__text">调试时示波器上的波形、串口打印的报错、换过的每一个电容值，都值得被写下来。日志是把“好像懂了”变成“确实做过”的唯一方式。</p>
+          </article>
+          <article class="about-card">
+            <p class="about-card__label">03 / TOOLCHAIN</p>
+            <h3 class="about-card__title">把工具链磨到顺手</h3>
+            <p class="about-card__text">Markdown 写笔记，Mermaid 画结构，KaTeX 写公式，Git 做版本。工具不追求多，追求在需要的时候不用想就能用起来。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" aria-labelledby="about-timeline">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-head__main">
+            <span class="section-index" aria-hidden="true">02</span>
+            <div>
+              <h2 class="section-title" id="about-timeline">版本记录</h2>
+              <p class="section-en">BUILD HISTORY / 这台系统的迭代</p>
+            </div>
+          </div>
+        </div>
+        <div class="timeline">
+          <article class="timeline__item timeline__item--now">
+            <span class="timeline__date">2026.11 / NOW</span>
+            <div>
+              <h3 class="timeline__title">转向纯内容记录</h3>
+              <p class="timeline__text">删掉内置学习路线，栏目与标签完全由我自己定义；写作台加入大纲、导图、打字机、快照与素材箱，资源库和跨页悬浮共写小电视上线。</p>
+            </div>
+          </article>
+          <article class="timeline__item">
+            <span class="timeline__date">2026.11</span>
+            <div>
+              <h3 class="timeline__title">STUDY OS v1.0 上线</h3>
+              <p class="timeline__text">双主题（PIXEL / LINE）、自定义栏目、日志搜索、终端模拟器与文章级特效全部接通。开始按周更新学习日志。</p>
+            </div>
+          </article>
+          <article class="timeline__item">
+            <span class="timeline__date">2026.10</span>
+            <div>
+              <h3 class="timeline__title">栏目结构定型</h3>
+              <p class="timeline__text">放弃内置的固定路线，改成由我自己定义的栏目：电子基础、嵌入式 MCU、工具与工作流、随笔，想加新方向随时建。</p>
+            </div>
+          </article>
+          <article class="timeline__item">
+            <span class="timeline__date">2026.10</span>
+            <div>
+              <h3 class="timeline__title">工具链接通</h3>
+              <p class="timeline__text">Markdown 构建管线加入 Mermaid、KaTeX 与代码高亮；所有依赖与字体本地化，站点可以离线打开。</p>
+            </div>
+          </article>
+          <article class="timeline__item">
+            <span class="timeline__date">2026.10</span>
+            <div>
+              <h3 class="timeline__title">第一行日志</h3>
+              <p class="timeline__text">决定不再把学习记录散落在收藏夹、笔记软件和脑子里。这个站从一篇“为什么”开始。</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" aria-labelledby="about-stack">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-head__main">
+            <span class="section-index" aria-hidden="true">03</span>
+            <div>
+              <h2 class="section-title" id="about-stack">这套站怎么造的</h2>
+              <p class="section-en">COLOPHON / 技术栈与设计</p>
+            </div>
+          </div>
+        </div>
+        <div class="stack-grid" aria-label="技术栈">
+          <span class="tag">HTML</span>
+          <span class="tag">CSS</span>
+          <span class="tag">Vanilla JS</span>
+          <span class="tag">Markdown</span>
+          <span class="tag">marked</span>
+          <span class="tag">Mermaid</span>
+          <span class="tag">KaTeX</span>
+          <span class="tag">highlight.js</span>
+          <span class="tag">GitHub Pages</span>
+        </div>
+        <p class="colophon">
+          <b>DESIGN /</b> 双主题皮肤：PIXEL 是深紫夜色、像素字体、CRT 扫描线与星尘粒子；LINE 是暖白纸面、Bricolage Grotesque 大标题与可交互的量化线场。所有动效都可以一键关闭，并尊重系统的“减少动态效果”设置。<br>
+          <b>BUILD /</b> 纯静态站点，无后端、无追踪。依赖与字体全部本地化，构建脚本把 Markdown 编译成可直接检索的 HTML 索引。
+        </p>
+
+        <div class="cta-band">
+          <div>
+            <h2 class="cta-band__title">想看看这台系统现在写到哪了？</h2>
+            <p class="cta-band__text">写作台会记住你的草稿与最后一笔，共写频道把光标位置实时投到小电视上。</p>
+          </div>
+          <div class="cta-band__actions">
+            <a class="btn btn--primary" href="write.html">打开写作台 <span aria-hidden="true">→</span></a>
+            <a class="btn" href="logs.html">翻阅笔记库</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script src="data/site.js" defer></script>
+  <script src="data/notes.generated.js" defer></script>
+  <script src="assets/js/theme.js" defer></script>
+  <script src="assets/js/motion.js" defer></script>
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/ai.js" defer></script>
+  <script src="assets/js/agent.js" defer></script>
+  <script src="assets/js/ambient.js" defer></script>
+  <script src="assets/js/linefield.js" defer></script>
+  <script src="assets/js/terminal.js" defer></script>
+  <script src="assets/js/portrait-girl.js" defer></script>
+  <script src="assets/js/portrait-scene.js" defer></script>
+  <script src="assets/js/portrait-video.js" defer></script>
+  <script src="assets/js/desk-link.js" defer></script>
+  <script src="assets/js/desk-screen.js" defer></script>
+  <script src="assets/js/live.js" defer></script>
+</body>
+</html>

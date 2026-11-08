@@ -1,0 +1,11 @@
+node_modules/
+.work/
+.tmp/
+_vendor_tmp/
+vibe_images/
+vibe_videos/
+*.log
+.DS_Store
+Thumbs.db
+data/auth.json
+data/metrics.json

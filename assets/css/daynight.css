@@ -1,0 +1,195 @@
+/* =========================================================
+   kawaii / STUDY OS — day / night palettes
+   Both skins follow the clock (06:00–18:00 day) unless the
+   reader pins DAY or NIGHT from the header control.
+   ========================================================= */
+
+/* ---------- pixel · day (light 8-bit paper) ---------- */
+
+[data-skin="pixel"][data-daynight="day"] {
+  color-scheme: light;
+  --bg: #f1ebff;
+  --bg-deep: #e7ddfa;
+  --panel: #fbf8ff;
+  --panel-2: #ffffff;
+  --panel-3: #eee4ff;
+  --ink: #1a1226;
+  --ink-2: #4a3d61;
+  --ink-3: #7c6c94;
+  --line: #d7c9ee;
+  --line-2: #b6a2da;
+  --line-bright: #6a2fe0;
+  --accent: #d81f9a;
+  --accent-2: #3f6f00;
+  --accent-3: #006c8f;
+  --accent-4: #8a5200;
+  --danger: #b2143a;
+  --success: #2f6b00;
+  --focus: #3f6f00;
+  --shadow: rgba(66, 44, 99, 0.16);
+  --selection-ink: #ffffff;
+}
+
+[data-skin="pixel"][data-daynight="day"] body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 14% 8%, rgba(216, 31, 154, 0.07), transparent 30%),
+    radial-gradient(circle at 86% 2%, rgba(0, 108, 143, 0.05), transparent 26%),
+    linear-gradient(rgba(106, 47, 224, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(106, 47, 224, 0.05) 1px, transparent 1px);
+  background-size: auto, auto, 32px 32px, 32px 32px;
+}
+
+[data-skin="pixel"][data-daynight="day"] body::before {
+  opacity: 0.1;
+  mix-blend-mode: multiply;
+}
+
+[data-skin="pixel"][data-daynight="day"] body::after {
+  background: radial-gradient(ellipse at 50% 46%, transparent 64%, rgba(70, 40, 110, 0.1) 100%);
+}
+
+[data-skin="pixel"][data-daynight="day"] .masthead {
+  background: rgba(247, 243, 255, 0.92);
+  box-shadow: 0 5px 0 rgba(80, 60, 110, 0.08);
+}
+
+[data-skin="pixel"][data-daynight="day"] .logs-toolbar,
+[data-skin="pixel"][data-daynight="day"] .res-toolbar {
+  background: rgba(247, 243, 255, 0.94);
+  border-bottom: 1px solid var(--line);
+}
+
+[data-skin="pixel"][data-daynight="day"] .hero__ticker {
+  color: #f7f9f0;
+}
+
+[data-skin="pixel"][data-daynight="day"] :is(
+  .btn--primary:hover,
+  .icon-btn--terminal:hover,
+  .motion-note__go:hover,
+  .code-copy:hover,
+  .lightbox__close:hover
+) {
+  color: #f7f9f0;
+}
+
+/* ---------- pixel · night (lighter than the old ink) ---------- */
+
+[data-skin="pixel"][data-daynight="night"] {
+  --bg: #140d26;
+  --bg-deep: #0f081c;
+  --panel: #1d1233;
+  --panel-2: #26183f;
+  --panel-3: #34205c;
+  --ink: #fbf6ff;
+  --ink-2: #d8c9ee;
+  --ink-3: #a693c4;
+  --line: #4a2f70;
+  --line-2: #6d479e;
+}
+
+[data-skin="pixel"][data-daynight="night"] body::before {
+  opacity: 0.24;
+}
+
+[data-skin="pixel"][data-daynight="night"] body::after {
+  background: radial-gradient(ellipse at 50% 46%, transparent 56%, rgba(4, 1, 10, 0.36) 100%);
+}
+
+[data-skin="pixel"][data-daynight="night"] .masthead {
+  background: rgba(20, 13, 38, 0.9);
+}
+
+[data-skin="pixel"][data-daynight="night"] .logs-toolbar,
+[data-skin="pixel"][data-daynight="night"] .res-toolbar {
+  background: rgba(20, 13, 38, 0.92);
+}
+
+/* ---------- line · night (charcoal paper) ---------- */
+
+[data-skin="line"][data-daynight="night"] {
+  color-scheme: dark;
+  --bg: #151515;
+  --bg-deep: #0f0f0f;
+  --panel: #1c1c1c;
+  --panel-2: #222222;
+  --panel-3: #2a2a2a;
+  --ink: #f3f1ea;
+  --ink-2: #c9c6bc;
+  --ink-3: #928f86;
+  --line: #333330;
+  --line-2: #4c4a44;
+  --line-bright: #f3f1ea;
+  --accent: #7aa2ff;
+  --accent-2: #7aa2ff;
+  --accent-3: #f3f1ea;
+  --accent-4: #b9b6ad;
+  --danger: #ff7b74;
+  --success: #6fd39b;
+  --focus: #7aa2ff;
+  --selection-ink: #151515;
+}
+
+[data-skin="line"][data-daynight="night"] body {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+}
+
+[data-skin="line"][data-daynight="night"] .masthead {
+  background: rgba(21, 21, 21, 0.94);
+  box-shadow: none;
+}
+
+[data-skin="line"][data-daynight="night"] .logs-toolbar,
+[data-skin="line"][data-daynight="night"] .res-toolbar {
+  background: rgba(21, 21, 21, 0.95);
+  border-bottom-color: var(--line);
+}
+
+[data-skin="line"][data-daynight="night"] .auth-chip {
+  background: rgba(28, 28, 28, 0.94);
+}
+
+[data-skin="line"][data-daynight="night"] .btn--primary {
+  background: #2f5cff;
+  border-color: #2f5cff;
+  color: #ffffff;
+}
+
+[data-skin="line"][data-daynight="night"] .btn--primary:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+/* ---------- reading comfort: soften the CRT haze ---------- */
+
+.screen::before {
+  opacity: 0.34;
+}
+
+.screen[data-screen-glow="green"] {
+  --screen-ink: #c9ff8c;
+  --screen-glow: rgba(201, 255, 140, 0.42);
+  --screen-dim: #7fa957;
+}
+
+.screen[data-screen-glow="amber"] {
+  --screen-ink: #ffd28a;
+  --screen-glow: rgba(255, 210, 138, 0.42);
+  --screen-dim: #b08a4a;
+}
+
+[data-skin="pixel"] .note-hero__glow {
+  opacity: 0.7;
+}
+
+/* Pixel day keeps the portrait scene consistent with the daylight page. */
+[data-skin="pixel"][data-daynight="day"] .portrait-video,
+[data-skin="pixel"][data-daynight="day"] .portrait-scene {
+  filter: brightness(1.16) saturate(0.92) contrast(0.98);
+}
+
+[data-skin="pixel"][data-daynight="day"] .portrait-frame__stage {
+  background: color-mix(in srgb, var(--bg-deep) 70%, #ffe9c9 30%);
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-skin="pixel" data-fx="on">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>文章 · kawaii / STUDY OS</title>
+  <meta name="description" content="kawaii 的文章库：笔记、实验、排障与复盘，按时间、阅读、点赞与收藏浏览，支持全文搜索。">
+  <meta name="theme-color" content="#0b0616">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/blog.css">
+  <link rel="stylesheet" href="assets/css/cover.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/terminal.css">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add("js");
+      try {
+        var skin = localStorage.getItem("kawaii.skin.v1");
+        if (skin === "pixel" || skin === "line") root.setAttribute("data-skin", skin);
+        root.setAttribute("data-fx", localStorage.getItem("kawaii.fx.v1") === "off" ? "off" : "on");
+        var daynight = localStorage.getItem("kawaii.daynight.v1");
+        var hour = new Date().getHours();
+        root.setAttribute("data-daynight", (daynight === "day" || daynight === "night") ? daynight : (hour >= 6 && hour < 18 ? "day" : "night"));
+        var motion = localStorage.getItem("kawaii.motion.v1");
+        if (motion === "full" || motion === "reduced") root.setAttribute("data-motion", motion);
+        if (!sessionStorage.getItem("kawaii.booted")) root.classList.add("boot-on");
+      } catch (error) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/daynight.css">
+</head>
+<body id="top" data-page="logs">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <div class="boot-screen" id="boot-screen" aria-hidden="true">
+    <div class="boot-screen__box">
+      <p class="boot-screen__brand">kawaii / STUDY OS<br>ARTICLE LIBRARY</p>
+      <p class="boot-screen__line" style="--i:0"><span>[index] scan /articles</span><b>READY</b></p>
+      <p class="boot-screen__line" style="--i:1"><span>[index] build tag table</span><b>OK</b></p>
+      <p class="boot-screen__line" style="--i:2"><span>[index] open search channel</span><b>READY</b></p>
+      <div class="boot-screen__bar"><i></i></div>
+      <p class="boot-screen__hint">CLICK OR PRESS ANY KEY TO SKIP</p>
+    </div>
+  </div>
+
+  <header class="masthead" data-site-header></header>
+
+  <main class="page-main" id="main">
+    <section class="section blog-section" aria-label="文章库">
+      <div class="container">
+        <div class="blog-shell">
+          <aside class="blog-profile" data-blog-profile aria-label="作者资料"></aside>
+          <div class="blog-main">
+            <header class="blog-main__head">
+              <div>
+                <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>ARTICLE LIBRARY / 全文可检索</p>
+                <h1 class="blog-main__title">文章</h1>
+                <p class="blog-main__sub">笔记、实验、排障、复盘和生活随笔都在这里；类型只是标签，不是独立的模块。</p>
+              </div>
+              <a class="section-link" href="index.html">回到首页 <span aria-hidden="true">→</span></a>
+            </header>
+
+            <div class="blog-tabs" role="tablist" aria-label="文章排序">
+              <button type="button" data-logs-tab="new" aria-pressed="true">最新</button>
+              <button type="button" data-logs-tab="views" aria-pressed="false">最热</button>
+              <button type="button" data-logs-tab="likes" aria-pressed="false">点赞最多</button>
+              <button type="button" data-logs-tab="favorites" aria-pressed="false">收藏最多</button>
+            </div>
+
+            <div class="logs-toolbar">
+              <div class="logs-toolbar__inner">
+                <label class="search-field">
+                  <span class="search-field__prompt" aria-hidden="true">⌕</span>
+                  <input type="search" data-logs-search placeholder="搜索文章标题、标签或正文…" aria-label="搜索文章">
+                  <span class="search-field__key" aria-hidden="true">/</span>
+                </label>
+                <label class="kind-field">
+                  <span class="kind-field__label">TYPE</span>
+                  <select data-logs-kind aria-label="按文章类型筛选">
+                    <option value="">全部类型</option>
+                    <option value="article">日志</option>
+                    <option value="concept">概念卡</option>
+                    <option value="experiment">实验记录</option>
+                    <option value="debug">排障记录</option>
+                    <option value="cornell">问答笔记</option>
+                    <option value="review">周复盘</option>
+                  </select>
+                </label>
+                <span class="logs-toolbar__count" data-logs-count>— / — ENTRIES</span>
+                <div class="view-switch" data-logs-view-group role="group" aria-label="视图切换">
+                  <button type="button" data-logs-view="grid" aria-pressed="true">列表</button>
+                  <button type="button" data-logs-view="archive" aria-pressed="false">归档</button>
+                </div>
+                <button class="logs-toolbar__manage author-only" type="button" data-taxonomy-open>管理分类</button>
+              </div>
+              <div class="filter-row" data-logs-filters></div>
+              <div class="filter-row filter-row--tagmode" data-logs-tagmode hidden></div>
+              <div class="filter-row filter-row--collections" data-logs-collections></div>
+            </div>
+
+            <div class="note-grid" data-logs-grid></div>
+
+            <div class="cta-band">
+              <div>
+                <h2 class="cta-band__title">文章按类型生长，不按文件夹拆散。</h2>
+                <p class="cta-band__text">所有内容都用同一套「文章」结构发布；用栏目、标签和搜索找到它们。</p>
+              </div>
+              <div class="cta-band__actions">
+                <a class="btn btn--primary" href="resources.html">翻资源库 <span aria-hidden="true">→</span></a>
+                <a class="btn" href="about.html">关于 kawaii</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="taxonomy" id="taxonomy-dialog" aria-labelledby="taxonomy-title" data-taxonomy>
+    <div class="taxonomy__frame">
+      <header class="taxonomy__head">
+        <div>
+          <span class="taxonomy__tag">TAXONOMY / 分类管理</span>
+          <h2 class="taxonomy__title" id="taxonomy-title">栏目与标签</h2>
+        </div>
+        <button class="taxonomy__close" type="button" data-taxonomy-close aria-label="关闭">×</button>
+      </header>
+
+      <div class="taxonomy__tabs" role="tablist" aria-label="分类类型">
+        <button type="button" role="tab" data-taxonomy-tab="collection" aria-selected="true">栏目 <b data-taxonomy-tab-count="collection">—</b></button>
+        <button type="button" role="tab" data-taxonomy-tab="tag" aria-selected="false">标签 <b data-taxonomy-tab-count="tag">—</b></button>
+      </div>
+
+      <p class="taxonomy__note" data-taxonomy-note>重命名、合并与删除会直接改写 notes/ 里的 front-matter。每次批量操作都保留一步撤销。</p>
+
+      <div class="taxonomy__list" data-taxonomy-list role="tabpanel" aria-label="分类列表"></div>
+
+      <div class="taxonomy__create">
+        <label><span class="taxonomy__create-label">新建<span data-taxonomy-create-label>栏目</span></span>
+          <input type="text" data-taxonomy-create placeholder="输入名称，去写作台写第一篇">
+        </label>
+        <button class="btn btn--small" type="button" data-taxonomy-create-go>去写一篇</button>
+      </div>
+
+      <footer class="taxonomy__foot">
+        <label class="taxonomy__merge">合并到
+          <input type="text" data-taxonomy-merge-target placeholder="目标名称">
+        </label>
+        <button class="btn btn--small" type="button" data-taxonomy-merge disabled>合并所选</button>
+        <button class="btn btn--small btn--ghost" type="button" data-taxonomy-undo hidden>撤销上一次</button>
+        <span class="taxonomy__status" data-taxonomy-status role="status"></span>
+      </footer>
+    </div>
+  </dialog>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script src="data/site.js" defer></script>
+  <script src="data/notes.generated.js" defer></script>
+  <script src="assets/js/theme.js" defer></script>
+  <script src="assets/js/motion.js" defer></script>
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/ai.js" defer></script>
+  <script src="assets/js/agent.js" defer></script>
+  <script src="assets/js/ambient.js" defer></script>
+  <script src="assets/js/linefield.js" defer></script>
+  <script src="assets/js/terminal.js" defer></script>
+  <script src="assets/js/cover-template.js" defer></script>
+  <script src="assets/js/metrics.js" defer></script>
+  <script src="assets/js/catgirl-avatar.js" defer></script>
+  <script src="assets/js/blog.js" defer></script>
+  <script src="assets/js/logs.js" defer></script>
+  <script src="assets/js/auth-gate.js" defer></script>
+  <script src="assets/js/taxonomy-admin.js" defer></script>
+  <script src="assets/js/cover-fx.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+/* =========================================================
+   kawaii / STUDY OS — note lab
+   PWM / RC widgets and WaveDrom timing, both skins
+   ========================================================= */
+
+.lab {
+  margin: 12px 0 4px;
+  padding: 12px 13px 10px;
+  border: var(--border) solid var(--line);
+  background: var(--panel);
+}
+
+.lab__plot {
+  position: relative;
+  margin-bottom: 10px;
+  border: 1px solid var(--line);
+  background: var(--bg-deep);
+}
+
+.lab__plot svg {
+  display: block;
+  width: 100%;
+  height: clamp(88px, 26vw, 120px);
+}
+
+.lab__grid {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.lab__wave {
+  fill: none;
+  stroke: var(--accent-2);
+  stroke-width: 2;
+  stroke-linejoin: miter;
+}
+
+.lab__curve {
+  fill: none;
+  stroke: var(--accent-3);
+  stroke-width: 2;
+}
+
+.lab__guide {
+  stroke: var(--accent);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.lab__marker {
+  fill: var(--accent);
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+.lab__control {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--ink-2);
+}
+
+.lab__control-name {
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.lab__control-value {
+  min-width: 5.5em;
+  text-align: right;
+  font-family: var(--font-body);
+  color: var(--accent-2);
+}
+
+.lab__control input[type="range"] {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: ew-resize;
+}
+
+.lab__values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1px;
+  margin: 0;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.lab__values > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 9px;
+  background: var(--panel-2);
+}
+
+.lab__values dt {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.lab__values dd {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.lab-error {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border: 1px solid var(--danger);
+  background: var(--panel-2);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--danger);
+}
+
+.wavedrom {
+  padding: 12px 14px;
+  overflow-x: auto;
+  color: var(--ink-2);
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.wavedrom svg {
+  display: block;
+  min-width: 100%;
+  height: auto;
+}
+
+[data-skin="line"] .lab {
+  border-color: var(--line-2);
+  background: var(--panel-2);
+}
+
+[data-skin="line"] .lab__plot {
+  border-color: var(--line-2);
+  background: #ffffff;
+}
+
+[data-skin="line"] .lab__grid {
+  stroke: var(--line-2);
+}
+
+[data-skin="line"] .lab__wave {
+  stroke: #0f7b3f;
+}
+
+[data-skin="line"] .lab__curve {
+  stroke: var(--accent);
+}
+
+[data-skin="line"] .lab__marker,
+[data-skin="line"] .lab__guide {
+  stroke: var(--ink);
+}
+
+[data-skin="line"] .lab__marker {
+  fill: var(--accent);
+}
+
+[data-skin="line"] .lab__guide {
+  stroke: var(--accent);
+}
+
+[data-skin="line"] .lab__values {
+  background: var(--line-2);
+  border-color: var(--line-2);
+}
+
+[data-skin="line"] .lab__values > div {
+  background: #ffffff;
+}
+
+[data-skin="line"] .lab__values dd {
+  color: var(--ink);
+}
+
+[data-skin="line"] .lab__control-value {
+  color: #0f7b3f;
+}
+
+[data-skin="line"] .lab-error {
+  border-color: #b3261e;
+  background: #fdf1f0;
+  color: #8c1c16;
+}
+
+[data-skin="line"] .wavedrom svg {
+  background: #ffffff;
+}
+
+@media (max-width: 560px) {
+  .lab {
+    padding: 10px;
+  }
+
+  .lab__control {
+    grid-template-columns: 1fr auto;
+    gap: 6px 10px;
+  }
+
+  .lab__control input[type="range"] {
+    grid-column: 1 / -1;
+  }
+
+  .lab__values {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media print {
+  .lab {
+    break-inside: avoid;
+    border-color: #b9b7b0;
+  }
+
+  .lab__control input[type="range"] {
+    display: none;
+  }
+}

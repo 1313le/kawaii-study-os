@@ -1,0 +1,207 @@
+/* =========================================================
+   kawaii / STUDY OS — author gate UI
+   ========================================================= */
+
+.auth {
+  width: min(460px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink-1);
+}
+
+.auth::backdrop {
+  background: rgba(6, 3, 14, 0.74);
+  backdrop-filter: blur(5px);
+}
+
+[data-skin="line"] .auth::backdrop {
+  background: rgba(20, 18, 14, 0.34);
+}
+
+.auth__frame {
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.48);
+  overflow: hidden;
+}
+
+[data-skin="line"] .auth__frame {
+  box-shadow: 0 20px 50px rgba(40, 32, 20, 0.16);
+}
+
+.auth__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.auth__tag {
+  color: var(--accent-2);
+  font-family: var(--font-terminal);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+
+.auth__title {
+  margin: 4px 0 0;
+  font-size: 22px;
+}
+
+.auth__close {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.auth__close:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.auth__note {
+  margin: 0;
+  padding: 10px 20px;
+  border-bottom: 1px dashed var(--line);
+  color: var(--ink-3);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.68;
+}
+
+.auth__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px 6px;
+}
+
+.auth__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--ink-3);
+  font-family: var(--font-ui);
+  font-size: 12px;
+}
+
+.auth__field input,
+.auth__challenge input {
+  min-height: 38px;
+  padding: 7px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--bg-deep);
+  color: var(--ink-1);
+  font-family: var(--font-ui);
+  font-size: 14px;
+}
+
+.auth__field input:focus,
+.auth__challenge input:focus {
+  border-color: var(--accent-2);
+  outline: none;
+}
+
+.auth__challenge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.auth__question {
+  flex: 0 0 auto;
+  color: var(--accent-2);
+  font-family: var(--font-terminal);
+  font-size: 14px;
+  letter-spacing: 0.06em;
+}
+
+.auth__challenge input {
+  flex: 1;
+}
+
+.auth__refresh {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.auth__refresh:hover {
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+}
+
+.auth__error {
+  margin: 0;
+  color: var(--accent);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.auth__foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 20px 18px;
+}
+
+.auth-chip {
+  position: fixed;
+  right: 16px;
+  bottom: 78px;
+  z-index: 110;
+  padding: 6px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  color: var(--ink-3);
+  font-family: var(--font-terminal);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.auth-chip[data-authed="true"] {
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+}
+
+.auth-chip:hover {
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+}
+
+@media (max-width: 620px) {
+  .auth-chip {
+    right: 12px;
+    bottom: 86px;
+  }
+}
+
+[data-skin="line"] .auth-chip {
+  background: rgba(247, 246, 242, 0.94);
+}
+
+/* Author-only controls stay hidden until the gate is unlocked. */
+body:not([data-authed="true"]) .author-only {
+  display: none !important;
+}

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <g fill="currentColor">
+    <polygon points="26,39 60,56 60,90 26,73" fill-opacity="0.3"/>
+    <polygon points="60,56 94,39 94,73 60,90" fill-opacity="0.5"/>
+    <polygon points="60,22 94,39 60,56 26,39" fill-opacity="0.72"/>
+    <polygon points="60,30 77,38.5 60,47 43,38.5"/>
+    <polygon points="26,45 12,52 12,55 26,48"/>
+    <polygon points="26,55 12,62 12,65 26,58"/>
+    <polygon points="26,65 12,72 12,75 26,68"/>
+    <polygon points="94,45 108,52 108,55 94,48"/>
+    <polygon points="94,55 108,62 108,65 94,58"/>
+    <polygon points="94,65 108,72 108,75 94,68"/>
+  </g>
+</svg>

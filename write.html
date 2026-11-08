@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-skin="pixel" data-fx="on">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>写作台 · kawaii / STUDY OS</title>
+  <meta name="description" content="kawaii 的 8bit 写作台：在一块像素显像管上写 Markdown，保存到 notes/，并让 AI 润色与纠错。">
+  <meta name="theme-color" content="#0b0616">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/terminal.css">
+  <link rel="stylesheet" href="assets/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="assets/css/write.css">
+  <link rel="stylesheet" href="assets/css/mindmap.css">
+  <link rel="stylesheet" href="assets/css/pip.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add("js");
+      try {
+        var skin = localStorage.getItem("kawaii.skin.v1");
+        if (skin === "pixel" || skin === "line") root.setAttribute("data-skin", skin);
+        root.setAttribute("data-fx", localStorage.getItem("kawaii.fx.v1") === "off" ? "off" : "on");
+        var daynight = localStorage.getItem("kawaii.daynight.v1");
+        var hour = new Date().getHours();
+        root.setAttribute("data-daynight", (daynight === "day" || daynight === "night") ? daynight : (hour >= 6 && hour < 18 ? "day" : "night"));
+        var motion = localStorage.getItem("kawaii.motion.v1");
+        if (motion === "full" || motion === "reduced") root.setAttribute("data-motion", motion);
+        if (!sessionStorage.getItem("kawaii.booted")) root.classList.add("boot-on");
+      } catch (error) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/daynight.css">
+</head>
+<body id="top" data-page="write" data-requires-auth>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <div class="boot-screen" id="boot-screen" aria-hidden="true">
+    <div class="boot-screen__box">
+      <p class="boot-screen__brand">kawaii / STUDY OS<br>WRITE SYSTEM</p>
+      <p class="boot-screen__line" style="--i:0"><span>[boot] mount /notes</span><b>OK</b></p>
+      <p class="boot-screen__line" style="--i:1"><span>[boot] load editor rom</span><b>32K</b></p>
+      <p class="boot-screen__line" style="--i:2"><span>[boot] open write channel</span><b>READY</b></p>
+      <div class="boot-screen__bar"><i></i></div>
+      <p class="boot-screen__hint">CLICK OR PRESS ANY KEY TO SKIP</p>
+    </div>
+  </div>
+
+  <header class="masthead" data-site-header></header>
+
+  <main class="desk" id="main">
+    <div class="desk__room" aria-hidden="true">
+      <span class="desk__grid"></span>
+      <span class="desk__glow"></span>
+    </div>
+
+    <div class="container desk__inner">
+      <header class="desk__intro">
+        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>WRITE CHANNEL / 本地写作台</p>
+        <h1 class="desk__title">把你的<em>学习过程</em>打成字</h1>
+        <p class="desk__lede">整块屏幕就是一个输入框。写完按 <kbd>Ctrl</kbd> + <kbd>S</kbd> 落盘到 <code>notes/</code>，站点自动重建；润色和纠错会先给你看对照稿，再决定要不要采用。</p>
+      </header>
+
+      <section class="unit" aria-label="8bit 写作终端">
+        <div class="unit__chassis">
+          <div class="unit__head">
+            <span class="unit__brand">kawaii<span>80</span></span>
+            <span class="unit__plate">WRITE SYSTEM · MODEL K-80</span>
+            <span class="unit__opts">
+              <button class="unit__opt" type="button" data-screen-font title="切换屏幕字体">FONT<span data-screen-font-label>像素</span></button>
+              <button class="unit__opt" type="button" data-screen-glow title="切换荧光颜色">GLOW<span data-screen-glow-label>绿</span></button>
+              <span class="unit__opt-size" role="group" aria-label="正文字号">
+                <button class="unit__opt" type="button" data-screen-size-down title="缩小字号" aria-label="缩小字号">A−</button>
+                <b data-screen-size-label>14px</b>
+                <button class="unit__opt" type="button" data-screen-size-up title="放大字号" aria-label="放大字号">A+</button>
+              </span>
+            </span>
+            <span class="unit__lamps" aria-hidden="true">
+              <i class="unit__lamp unit__lamp--pwr" data-lamp="power"></i>
+              <i class="unit__lamp unit__lamp--io" data-lamp="io"></i>
+              <i class="unit__lamp unit__lamp--err" data-lamp="error"></i>
+            </span>
+          </div>
+
+          <div class="unit__bezel">
+            <div class="screen" data-screen>
+              <div class="screen__bar">
+                <span class="screen__file" data-write-file>UNTITLED.MD</span>
+                <span class="screen__bar-right">
+                  <button class="screen__live" type="button" data-live-toggle aria-pressed="true" title="公开当前标题与光标前 4 行到关于页；关闭即停">LIVE</button>
+                  <button class="screen__versions" type="button" data-snapshots-open title="本地快照（最近 8 版）">VERSIONS / 版本</button>
+                  <span class="screen__state" data-write-state>DRAFT</span>
+                </span>
+              </div>
+              <div class="screen__pane">
+                <textarea id="write-screen" class="screen__input" spellcheck="false" autocomplete="off"
+                  autocapitalize="off" autocorrect="off" aria-label="Markdown 正文"></textarea>
+                <div class="screen__preview" data-write-preview hidden></div>
+                <div class="screen__map" data-write-map hidden></div>
+              </div>
+              <div class="screen__palette" data-write-palette hidden role="listbox" aria-label="插入命令"></div>
+              <aside class="screen__outline" data-write-outline hidden aria-label="文章大纲">
+                <div class="screen__outline-head">
+                  <span>OUTLINE / 大纲</span>
+                  <button type="button" data-outline-close aria-label="关闭大纲">×</button>
+                </div>
+                <ol class="screen__outline-list" data-outline-list></ol>
+              </aside>
+              <div class="screen__status">
+                <span data-write-pos>LN 1 · COL 1</span>
+                <span data-write-count>0 CHARS</span>
+                <span data-write-words>0 字</span>
+                <span data-write-selection hidden></span>
+                <span data-write-mode>EDIT / MD</span>
+                <span class="screen__saved" data-write-saved>未保存</span>
+              </div>
+              <div class="screen__glass" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <div class="unit__keys" role="group" aria-label="写作台功能键">
+            <div class="keys-primary">
+              <button class="keycap" type="button" data-write-action="view"><b>F1</b><span data-view-label>分屏</span></button>
+              <button class="keycap" type="button" data-write-action="save"><b>F2</b><span>保存</span></button>
+              <button class="keycap keycap--ai" type="button" data-write-action="polish"><b>F3</b><span>润色</span></button>
+              <button class="keycap keycap--ai" type="button" data-write-action="proofread"><b>F4</b><span>纠错</span></button>
+            </div>
+            <span class="keys-legend" aria-hidden="true">
+              <b>MAIN KEYS · F1–F4</b>
+              <i>F5–F10 → Fn</i>
+            </span>
+            <button class="keycap keycap--fn" type="button" data-fn-open aria-expanded="false" aria-controls="fn-deck" title="展开功能键 F5–F10">
+              <b>Fn</b><span>功能键</span><i class="keycap__led" data-fn-led aria-hidden="true"></i>
+            </button>
+            <div class="fn-deck" id="fn-deck" data-fn-deck role="group" aria-label="扩展功能键 F5–F10" hidden>
+              <div class="fn-deck__head">
+                <span class="fn-deck__title">FUNCTION KEYS / 功能键</span>
+                <span class="fn-deck__hint">ESC 收起 · 快捷键照常可用</span>
+                <button class="fn-deck__close" type="button" data-fn-close aria-label="收起功能键">×</button>
+              </div>
+              <div class="fn-deck__grid">
+                <button class="fn-key" type="button" data-write-action="export"><b>F5</b><span>导出</span><small>EXPORT</small></button>
+                <button class="fn-key" type="button" data-write-action="fullscreen" aria-pressed="false"><b>F6</b><span>全屏</span><small>IMMERSIVE</small></button>
+                <button class="fn-key" type="button" data-write-action="new"><b>F7</b><span>新笔记</span><small>NEW NOTE</small></button>
+                <button class="fn-key fn-key--toggle" type="button" data-write-action="typewriter" aria-pressed="false"><b>F8</b><span>打字机</span><small>TYPEWRITER</small><i class="fn-key__led" aria-hidden="true"></i></button>
+                <button class="fn-key fn-key--toggle" type="button" data-write-action="focus" aria-pressed="false"><b>F9</b><span>焦点</span><small>FOCUS</small><i class="fn-key__led" aria-hidden="true"></i></button>
+                <button class="fn-key fn-key--toggle" type="button" data-write-action="outline" aria-pressed="false"><b>F10</b><span>大纲</span><small>OUTLINE</small><i class="fn-key__led" aria-hidden="true"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="unit__meta">
+            <input type="text" data-meta-mirror="title" placeholder="标题（保存前必填）" aria-label="标题">
+            <input type="text" data-meta-mirror="collection" placeholder="栏目" aria-label="栏目">
+            <input type="date" data-meta-mirror="date" aria-label="日期">
+          </div>
+
+          <div class="unit__vent" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+        <div class="unit__shadow" aria-hidden="true"></div>
+      </section>
+
+      <section class="cowrite" aria-labelledby="cowrite-title" data-desk-feed>
+        <div class="cowrite__monitor">
+          <div class="cowrite__bar">
+            <span>LIVE FEED / 共写频道</span>
+            <b data-desk-feed-badge>IDLE</b>
+          </div>
+          <div class="cowrite__bezel">
+            <canvas class="cowrite__screen" data-desk-screen width="384" height="216" aria-label="少女的 CRT 正在显示的写作位置"></canvas>
+            <span class="cowrite__glass" aria-hidden="true"></span>
+          </div>
+          <div class="cowrite__foot">
+            <span data-desk-feed-pos>尚无写作记录</span>
+            <span data-desk-feed-title>UNTITLED.MD</span>
+          </div>
+        </div>
+        <div class="cowrite__copy">
+          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>CO-WRITE / 共写</p>
+          <h2 class="cowrite__title" id="cowrite-title">她屏幕上的<em>光标</em>跟着你走</h2>
+          <p class="cowrite__lede">你在这里敲下的行号、列号和光标前最后几行，会实时投到这块小 CRT 上；关于页肖像的帧头读的也是同一路信号。</p>
+          <ul class="cowrite__list">
+            <li><b>LN / COL</b><span>光标位置</span></li>
+            <li><b>TAIL</b><span>光标前最后几行</span></li>
+            <li><b>BAR</b><span>全文进度</span></li>
+          </ul>
+          <p class="cowrite__hint">同一浏览器开两个窗口也会同步；关掉写作台，关于页仍会记住最后一笔落在哪。</p>
+          <div class="cowrite__actions">
+            <button class="btn btn--small btn--primary" type="button" data-float-open>打开悬浮共写 <span aria-hidden="true">↗</span></button>
+            <span class="cowrite__pip">置顶小窗，切到别的网页也能看到写作位置；把截图、文本或链接拖进去，会落到下面的素材箱。</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="inbox" aria-labelledby="inbox-title">
+        <div class="spec__head">
+          <span class="spec__label" id="inbox-title">INBOX / 素材箱</span>
+          <span class="spec__hint">拖进悬浮小电视的截图、文本和链接会落在这里 · 点「插入」写到光标处</span>
+        </div>
+        <div class="inbox__grid" data-write-inbox></div>
+      </section>
+
+      <section class="spec" aria-label="笔记元数据">
+        <div class="spec__head">
+          <span class="spec__label">HEADER / 元数据</span>
+          <span class="spec__hint">决定这篇笔记在日志里的样子 · 先填标题和日期就能保存</span>
+          <button class="btn btn--small spec__ai" type="button" data-write-ai-create>AI 特效 / 封面</button>
+        </div>
+        <div class="spec__grid">
+          <label class="field field--wide">标题
+            <input type="text" data-meta="title" placeholder="例如：ADC 采样为什么要先校准">
+          </label>
+          <label class="field">日期
+            <input type="date" data-meta="date">
+          </label>
+          <label class="field">SLUG
+            <input type="text" data-meta="slug" placeholder="adc-calibration" pattern="[a-z0-9][a-z0-9-]*">
+          </label>
+          <label class="field">类型
+            <select data-meta="kind"></select>
+          </label>
+          <label class="field">栏目
+            <input type="text" data-meta="collection" list="collection-options" placeholder="生活 / 日记 / 学习笔记">
+          </label>
+          <datalist id="collection-options"></datalist>
+          <label class="field">强调色
+            <select data-meta="accent"></select>
+          </label>
+          <label class="field">动效
+            <select data-meta="fx"></select>
+          </label>
+          <label class="field">封面
+            <select data-meta="cover">
+              <option value="">按类型自动生成</option>
+              <option value="template:circuit">电路板 CIRCUIT</option>
+              <option value="template:waveform">示波器 WAVEFORM</option>
+              <option value="template:grid">点阵 GRID</option>
+              <option value="template:ladder">梯形图 LADDER</option>
+              <option value="template:chip">芯片 CHIP</option>
+              <option value="template:terminal">终端 TERMINAL</option>
+            </select>
+          </label>
+          <label class="field field--wide">标签
+            <input type="text" data-meta="tags" list="tag-options" placeholder="ADC, 校准, 采样（逗号分隔）">
+          </label>
+          <datalist id="tag-options"></datalist>
+          <div class="field__suggest" data-tag-suggest></div>
+          <label class="field field--wide">摘要
+            <input type="text" data-meta="summary" placeholder="留空则自动截取正文开头">
+          </label>
+          <label class="field field--wide">封面图
+            <input type="file" data-cover-file accept="image/png,image/jpeg,image/webp">
+          </label>
+          <div class="cover-import" data-cover-import hidden>
+            <canvas class="cover-import__canvas" data-cover-canvas width="320" height="176" aria-label="像素化预览"></canvas>
+            <div class="cover-import__tools">
+              <label>像素块 <input type="range" min="2" max="16" step="1" value="4" data-cover-pixel></label>
+              <label>色阶 <input type="range" min="2" max="8" step="1" value="4" data-cover-colors></label>
+              <button class="btn" type="button" data-cover-apply>上传为封面</button>
+              <span class="cover-import__hint" data-cover-hint></span>
+            </div>
+          </div>
+          <label class="field field--wide spec__load">载入已有笔记
+            <select data-write-load><option value="">— 新笔记 —</option></select>
+          </label>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <dialog class="snapshots" data-snapshots aria-labelledby="snapshots-title">
+    <div class="snapshots__frame">
+      <header class="snapshots__head">
+        <div>
+          <span class="snapshots__tag">VERSIONS / 本地快照</span>
+          <h2 class="snapshots__title" id="snapshots-title">最近的版本</h2>
+        </div>
+        <button class="snapshots__close" type="button" data-snapshots-close aria-label="关闭">×</button>
+      </header>
+      <p class="snapshots__note">每两分钟与每次保存各留一版，只存在这台浏览器，最多保留 8 版。</p>
+      <ul class="snapshots__list" data-snapshots-list></ul>
+      <p class="snapshots__status" data-snapshots-status role="status"></p>
+    </div>
+  </dialog>
+
+  <dialog class="ai-panel" data-ai-panel aria-labelledby="ai-panel-title">
+    <div class="ai-panel__form">
+      <header class="ai-panel__head">
+        <span class="ai-panel__tag">AI / EDITOR</span>
+        <h2 class="ai-panel__title" id="ai-panel-title" data-ai-title>润色</h2>
+        <button class="ai-panel__close" type="button" data-ai-close aria-label="关闭">×</button>
+      </header>
+
+      <div class="ai-panel__config" data-ai-config hidden>
+        <p class="ai-panel__note">第一次使用需要填一个 OpenAI 兼容接口。密钥只存在你这台浏览器里，只会发给你填的地址。</p>
+        <label>接口地址 <input type="url" data-ai-field="endpoint" placeholder="https://api.deepseek.com/v1" autocomplete="off"></label>
+        <label>模型 <input type="text" data-ai-field="model" placeholder="deepseek-chat" autocomplete="off"></label>
+        <label>API Key <input type="password" data-ai-field="key" placeholder="sk-..." autocomplete="off"></label>
+        <label class="ai-panel__remember"><input type="checkbox" data-ai-field="remember"> 记住在这台设备（写入 localStorage）</label>
+        <p class="ai-panel__err" data-ai-error hidden></p>
+      </div>
+
+      <div class="ai-panel__body" data-ai-body hidden>
+        <div class="ai-panel__compare" data-ai-compare hidden>
+          <div class="ai-panel__col">
+            <span class="ai-panel__col-label">原文</span>
+            <pre class="ai-panel__pre ai-panel__pre--old" data-ai-old></pre>
+          </div>
+          <div class="ai-panel__col">
+            <span class="ai-panel__col-label">建议</span>
+            <pre class="ai-panel__pre ai-panel__pre--new" data-ai-new></pre>
+          </div>
+        </div>
+        <ul class="ai-panel__hunks" data-ai-hunks hidden></ul>
+        <p class="ai-panel__status" data-ai-status></p>
+      </div>
+
+      <footer class="ai-panel__foot">
+        <button class="btn btn--primary" type="button" data-ai-accept hidden>采用 <kbd>Enter</kbd></button>
+        <button class="btn" type="button" data-ai-ignore hidden>忽略 <kbd>Esc</kbd></button>
+        <button class="btn btn--ghost" type="button" data-ai-undo hidden>撤销上一次</button>
+        <button class="btn btn--ghost" type="button" data-ai-configure hidden>配置 AI</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script src="data/site.js" defer></script>
+  <script src="data/notes.generated.js" defer></script>
+  <script src="assets/js/theme.js" defer></script>
+  <script src="assets/js/motion.js" defer></script>
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/agent.js" defer></script>
+  <script src="assets/js/ambient.js" defer></script>
+  <script src="assets/js/linefield.js" defer></script>
+  <script src="assets/js/terminal.js" defer></script>
+  <script src="assets/js/md-lite.js" defer></script>
+  <script src="assets/js/ai.js" defer></script>
+  <script src="assets/js/desk-link.js" defer></script>
+  <script src="assets/js/desk-screen.js" defer></script>
+  <script src="assets/js/clips.js" defer></script>
+  <script src="assets/js/mindmap.js" defer></script>
+  <script src="assets/js/float.js" defer></script>
+  <script src="assets/js/auth-gate.js" defer></script>
+  <script src="assets/js/write.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-skin="pixel" data-fx="on">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>kawaii / STUDY OS — 把学习编译成能运行的东西</title>
+  <meta name="description" content="kawaii 的个人学习记录站：写博客、做笔记、画思维导图、存学习资源。分类自主定义，每一步都留痕。">
+  <meta name="theme-color" content="#0b0616">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/blog.css">
+  <link rel="stylesheet" href="assets/css/cover.css">
+  <link rel="stylesheet" href="assets/css/terminal.css">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add("js");
+      try {
+        var skin = localStorage.getItem("kawaii.skin.v1");
+        if (skin === "pixel" || skin === "line") root.setAttribute("data-skin", skin);
+        root.setAttribute("data-fx", localStorage.getItem("kawaii.fx.v1") === "off" ? "off" : "on");
+        var daynight = localStorage.getItem("kawaii.daynight.v1");
+        var hour = new Date().getHours();
+        root.setAttribute("data-daynight", (daynight === "day" || daynight === "night") ? daynight : (hour >= 6 && hour < 18 ? "day" : "night"));
+        var motion = localStorage.getItem("kawaii.motion.v1");
+        if (motion === "full" || motion === "reduced") root.setAttribute("data-motion", motion);
+        if (!sessionStorage.getItem("kawaii.booted")) root.classList.add("boot-on");
+      } catch (error) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/daynight.css">
+</head>
+<body id="top" data-page="home">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <div class="boot-screen" id="boot-screen" aria-hidden="true">
+    <div class="boot-screen__box">
+      <p class="boot-screen__brand">kawaii / STUDY OS<br>BUILD 2026.11</p>
+      <p class="boot-screen__line" style="--i:0"><span>[kernel] mount /notes</span><b>OK</b></p>
+      <p class="boot-screen__line" style="--i:1"><span>[notes] index markdown files</span><b>10 FOUND</b></p>
+      <p class="boot-screen__line" style="--i:2"><span>[theme] pixel + line skin</span><b>READY</b></p>
+      <p class="boot-screen__line" style="--i:3"><span>[fx] crt / starfield / line field</span><b>ONLINE</b></p>
+      <p class="boot-screen__line" style="--i:4"><span>[desk] co-write channel</span><b>SYNCED</b></p>
+      <div class="boot-screen__bar"><i></i></div>
+      <p class="boot-screen__hint">CLICK OR PRESS ANY KEY TO SKIP</p>
+    </div>
+  </div>
+
+  <header class="masthead" data-site-header></header>
+
+  <main class="page-main" id="main">
+    <section class="hero">
+      <div class="container hero__inner">
+        <div class="hero__copy">
+          <p class="eyebrow hero__eyebrow">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span>SYSTEM ONLINE</span>
+            <span aria-hidden="true">/</span>
+            <span>PERSONAL LEARNING OS</span>
+            <span aria-hidden="true">/</span>
+            <span>EST. 2026</span>
+          </p>
+          <h1 class="hero__title">
+            <span class="hero__title-line">把学习</span>
+            <span class="hero__title-line">编译成<em>能运行</em></span>
+            <span class="hero__title-line">的东西<span class="cursor-block" aria-hidden="true"></span></span>
+          </h1>
+          <p class="hero__lede" data-site-text="intro">这里记录我从电子基础、嵌入式 MCU 到硬件工程的完整学习路径。文章可以检索、画成导图，每一步都留痕。</p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="logs.html">开始阅读 <span aria-hidden="true">→</span></a>
+            <a class="btn" href="about.html">关于 kawaii</a>
+            <button class="btn btn--ghost btn--terminal" type="button" data-terminal-open><span class="prompt" aria-hidden="true">~$</span> 打开终端</button>
+          </div>
+          <div class="hero__stats">
+            <div class="hero__stat"><strong data-stat="notes">10</strong><span>ARTICLES / 文章</span></div>
+            <div class="hero__stat"><strong data-stat="words">0</strong><span>WORDS / 字数</span></div>
+            <div class="hero__stat"><strong data-stat="collections">4</strong><span>COLLECTIONS / 栏目</span></div>
+            <div class="hero__stat"><strong data-stat="tags">0</strong><span>TAGS / 标签</span></div>
+          </div>
+        </div>
+
+        <div class="hero__side">
+          <div class="hero__console">
+            <div class="console-window">
+              <div class="console-window__bar">
+                <span class="console-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+                <span class="console-window__title"><b>kawaii</b>@study: ~/boot</span>
+                <span class="console-window__status">LIVE</span>
+              </div>
+              <div class="console-window__body">
+                <p class="boot-line" style="--i:0"><b>[ OK ]</b> index /notes — <span data-stat="notes">10</span> notes / <span data-stat="collections">4</span> collections</p>
+                <p class="boot-line" style="--i:1"><b>[ OK ]</b> load /markdown — mermaid + katex + wiki-links</p>
+                <p class="boot-line" style="--i:2"><b>[ OK ]</b> init /fx — crt scan / starfield / glitch</p>
+                <p class="boot-line boot-line--warn" style="--i:3"><b>[ WARN ]</b> draft waiting — 写作台还有一篇没写完</p>
+                <p class="boot-line boot-line--dim" style="--i:4"><b>[ .. ]</b> press ~ to open the terminal</p>
+                <p class="console-prompt"><span class="user">kawaii</span>@<span class="path">study</span>:~$ <span class="cmd">write --mode daily</span><span class="caret" aria-hidden="true"></span></p>
+              </div>
+              <div class="console-window__visual">
+                <img src="assets/img/hero-pixel.webp" alt="像素风硬件工作台：示波器、开发板与焊接工具" width="1536" height="1024" decoding="async" fetchpriority="high">
+                <div class="hero-crt" data-hero-crt>
+                  <button class="hero-crt__screen" type="button" data-crt-screen aria-label="学习电脑的屏幕：点一下，看看会不会蓝屏">
+                    <span class="crt-scanlines" aria-hidden="true"></span>
+                    <span class="crt-status" aria-hidden="true">
+                      <span class="crt-status__file" data-crt-file>~/fw/main.c</span>
+                      <span class="crt-status__mode"><i aria-hidden="true"></i><b data-crt-mode>TX</b></span>
+                    </span>
+                    <span class="crt-code" data-crt-code aria-hidden="true"></span>
+                    <svg class="crt-heart" viewBox="0 0 7 6" aria-hidden="true">
+                      <rect x="1" y="0" width="2" height="1"></rect>
+                      <rect x="4" y="0" width="2" height="1"></rect>
+                      <rect x="0" y="1" width="7" height="2"></rect>
+                      <rect x="1" y="3" width="5" height="1"></rect>
+                      <rect x="2" y="4" width="3" height="1"></rect>
+                      <rect x="3" y="5" width="1" height="1"></rect>
+                    </svg>
+                    <span class="crt-bsod" data-crt-bsod hidden aria-hidden="true">
+                      <span class="crt-bsod__head">STUDY_OS</span>
+                      <span class="crt-bsod__body">A fatal exception <b>0x1F4</b> has occurred at <b>0xB007:0x0001</b>.</span>
+                      <span class="crt-bsod__body">The current application will be terminated.</span>
+                      <span class="crt-bsod__cn">* 你敲得太快，CPU 笑场了。</span>
+                      <span class="crt-bsod__body">* Press any key to reboot<span class="crt-blink">_</span></span>
+                      <span class="crt-bsod__dump">0x00000000 0xDEADBEEF 0x0000CAFE</span>
+                    </span>
+                    <span class="crt-flash" data-crt-flash aria-hidden="true"></span>
+                  </button>
+                  <canvas class="hero-crt__keys" data-crt-keys width="1536" height="1024" aria-hidden="true"></canvas>
+                  <canvas class="hero-crt__scope" data-crt-scope width="144" height="135" aria-hidden="true"></canvas>
+                  <span class="hero-crt__zzz" aria-hidden="true"><i>z</i><i>z</i><i>z</i></span>
+                  <span class="hero-crt__led" aria-hidden="true"></span>
+                  <span class="hero-crt__glow" aria-hidden="true"></span>
+                  <span class="hero-crt__hint" aria-hidden="true">DON'T CLICK<span class="crt-blink">_</span></span>
+                </div>
+                <span class="hero__frame-label" data-crt-frame>FRAME / 001</span>
+                <p class="sr-only" role="status" data-crt-live></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero__field" aria-hidden="true">
+            <div class="hero__field-top">
+              <span>MARK / QUANTIZED</span>
+              <span>HOVER TO SCAN</span>
+            </div>
+            <div class="hero__field-canvas">
+              <canvas data-linefield></canvas>
+              <div class="field-hud" data-field-hud aria-hidden="true">
+                <span class="field-hud__frame"></span>
+                <span class="field-hud__box field-hud__box--head" data-hud-head>
+                  <i>AUTHOR / KAWAII</i>
+                  <b><span class="field-hud__dot"></span><span data-hud-state>STANDBY</span></b>
+                </span>
+                <span class="field-hud__box field-hud__box--eyes" data-hud-eyes>
+                  <i>FOCUS</i>
+                  <b data-hud-focus>IDLE</b>
+                </span>
+                <div class="field-hud__card" data-hud-card>
+                  <span class="field-hud__label"><i class="field-hud__dot"></i>WRITE CHANNEL / 共写频道</span>
+                  <strong data-hud-title>作者现在不在写作台前</strong>
+                  <span data-hud-meta>DESK STANDBY</span>
+                </div>
+              </div>
+            </div>
+            <div class="hero__field-caption">
+              <strong>kawaii</strong>
+              <span>STUDY OS · LINE MODE</span>
+            </div>
+          </div>
+
+          <div class="hero__meta-list">
+            <div class="hero__meta-row"><span>Role</span><span>硬件开发 / 学习者</span><strong>ACTIVE</strong></div>
+            <div class="hero__meta-row"><span>Focus</span><span>笔记 / 导图 / 资源库</span><strong>2026</strong></div>
+            <div class="hero__meta-row"><span>Stack</span><span>Markdown / Mermaid / KaTeX</span><strong>LOCAL</strong></div>
+            <div class="hero__meta-row"><span>Status</span><span>持续构建中</span><strong>ONLINE</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__ticker" aria-hidden="true">
+        <div class="ticker__track">
+          <div class="ticker__group">
+            <span>WRITE</span><span>LOG</span><span>MAP</span><span>REPEAT</span><span>NOTE</span><span>CLIP</span><span>TAG</span><span>REVIEW</span>
+          </div>
+          <div class="ticker__group">
+            <span>WRITE</span><span>LOG</span><span>MAP</span><span>REPEAT</span><span>NOTE</span><span>CLIP</span><span>TAG</span><span>REVIEW</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section blog-section" aria-labelledby="blog-title">
+      <div class="container">
+        <div class="blog-shell">
+          <aside class="blog-profile" data-blog-profile aria-label="作者资料"></aside>
+          <div class="blog-main">
+            <header class="blog-main__head">
+              <div>
+                <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>ARTICLES / 文章</p>
+                <h2 class="blog-main__title" id="blog-title">最近写的</h2>
+                <p class="blog-main__sub">所有内容都是文章：笔记、实验记录、排障、复盘与生活随笔，用类型区分，不拆成多个模块。</p>
+              </div>
+              <a class="section-link" href="logs.html">全部文章 <span aria-hidden="true">→</span></a>
+            </header>
+            <div class="blog-tabs" role="tablist" aria-label="文章排序">
+              <button type="button" data-blog-sort="new" aria-pressed="true">最新</button>
+              <button type="button" data-blog-sort="views" aria-pressed="false">最热</button>
+              <button type="button" data-blog-sort="likes" aria-pressed="false">点赞最多</button>
+              <button type="button" data-blog-sort="favorites" aria-pressed="false">收藏最多</button>
+            </div>
+            <div class="blog-feed" data-home-logs>
+              <p class="mono-label">LOADING ARTICLES…</p>
+            </div>
+            <div class="blog-more"><a class="btn" href="logs.html">进入文章库 <span aria-hidden="true">→</span></a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="res-title">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-head__main">
+            <span class="section-index" aria-hidden="true">02</span>
+            <div>
+              <h2 class="section-title" id="res-title">资源库</h2>
+              <p class="section-en">RESOURCE VAULT / 书、手册、课程与网盘</p>
+            </div>
+          </div>
+          <a class="section-link" href="resources.html">OPEN VAULT / 打开资源库 <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="res-home" data-home-res>
+          <p class="mono-label">LOADING RESOURCES…</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="method-title">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-head__main">
+            <span class="section-index" aria-hidden="true">03</span>
+            <div>
+              <h2 class="section-title" id="method-title">记录方法</h2>
+              <p class="section-en">METHOD / 四步循环</p>
+            </div>
+          </div>
+        </div>
+        <div class="method-grid">
+          <article class="method-step">
+            <span class="method-step__num">STEP 01</span>
+            <h3 class="method-step__title">先收集，再动笔</h3>
+            <p class="method-step__text">把查到的截图、文本、链接拖进共写小电视，存进素材箱。写作时随手取用，思路不被打断。</p>
+            <span class="method-step__en">COLLECT</span>
+          </article>
+          <article class="method-step">
+            <span class="method-step__num">STEP 02</span>
+            <h3 class="method-step__title">用自己的话写下来</h3>
+            <p class="method-step__text">记录现象、参数和踩坑过程。代码会过时，现场记录不会。每篇笔记都是一个可检索的检查点。</p>
+            <span class="method-step__en">WRITE</span>
+          </article>
+          <article class="method-step">
+            <span class="method-step__num">STEP 03</span>
+            <h3 class="method-step__title">把笔记画成导图</h3>
+            <p class="method-step__text">标题与列表自动生成思维导图，折叠、缩放、导出。结构一眼可见，复习不再翻全文。</p>
+            <span class="method-step__en">MAP</span>
+          </article>
+          <article class="method-step">
+            <span class="method-step__num">STEP 04</span>
+            <h3 class="method-step__title">复盘后再开下一轮</h3>
+            <p class="method-step__text">每周回看栏目与标签，合并重复分类，补上真正卡住自己的部分，然后继续写下一篇。</p>
+            <span class="method-step__en">REVIEW</span>
+          </article>
+        </div>
+
+        <div class="cta-band">
+          <div>
+            <h2 class="cta-band__title">读到这里，下一篇也写好了。</h2>
+            <p class="cta-band__text">所有文章按时间、阅读、点赞和收藏排在一起；想深入哪篇就直接点开。</p>
+          </div>
+          <div class="cta-band__actions">
+            <a class="btn btn--primary" href="logs.html">翻阅全部文章 <span aria-hidden="true">→</span></a>
+            <a class="btn" href="about.html">关于 kawaii</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script src="data/site.js" defer></script>
+  <script src="data/notes.generated.js" defer></script>
+  <script src="assets/js/theme.js" defer></script>
+  <script src="assets/js/motion.js" defer></script>
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/ai.js" defer></script>
+  <script src="assets/js/agent.js" defer></script>
+  <script src="assets/js/ambient.js" defer></script>
+  <script src="assets/js/linefield.js" defer></script>
+  <script src="assets/js/live.js" defer></script>
+  <script src="assets/js/hero-scene.js" defer></script>
+  <script src="assets/js/hero-screen.js" defer></script>
+  <script src="assets/js/terminal.js" defer></script>
+  <script src="assets/js/cover-template.js" defer></script>
+  <script src="assets/js/metrics.js" defer></script>
+  <script src="assets/js/catgirl-avatar.js" defer></script>
+  <script src="assets/js/blog.js" defer></script>
+  <script src="assets/js/home.js" defer></script>
+  <script src="assets/js/cover-fx.js" defer></script>
+</body>
+</html>

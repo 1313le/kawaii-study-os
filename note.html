@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-skin="pixel" data-fx="on">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>学习日志 · kawaii / STUDY OS</title>
+  <meta name="description" content="kawaii 的硬件开发学习日志。">
+  <meta name="theme-color" content="#0b0616">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/cover.css">
+  <link rel="stylesheet" href="assets/css/article.css">
+  <link rel="stylesheet" href="assets/css/note-lab.css">
+  <link rel="stylesheet" href="assets/css/mindmap.css">
+  <link rel="stylesheet" href="assets/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="assets/css/terminal.css">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add("js");
+      try {
+        var skin = localStorage.getItem("kawaii.skin.v1");
+        if (skin === "pixel" || skin === "line") root.setAttribute("data-skin", skin);
+        root.setAttribute("data-fx", localStorage.getItem("kawaii.fx.v1") === "off" ? "off" : "on");
+        var daynight = localStorage.getItem("kawaii.daynight.v1");
+        var hour = new Date().getHours();
+        root.setAttribute("data-daynight", (daynight === "day" || daynight === "night") ? daynight : (hour >= 6 && hour < 18 ? "day" : "night"));
+        var motion = localStorage.getItem("kawaii.motion.v1");
+        if (motion === "full" || motion === "reduced") root.setAttribute("data-motion", motion);
+        if (!sessionStorage.getItem("kawaii.booted")) root.classList.add("boot-on");
+      } catch (error) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/daynight.css">
+</head>
+<body id="top" data-page="note">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <div class="reading-bar" aria-hidden="true"><div class="reading-bar__fill" data-reading-fill></div></div>
+
+  <div class="boot-screen" id="boot-screen" aria-hidden="true">
+    <div class="boot-screen__box">
+      <p class="boot-screen__brand">kawaii / STUDY OS<br>NOTE VIEWER</p>
+      <p class="boot-screen__line" style="--i:0"><span>[note] resolve slug</span><b>OK</b></p>
+      <p class="boot-screen__line" style="--i:1"><span>[note] mount markdown html</span><b>OK</b></p>
+      <p class="boot-screen__line" style="--i:2"><span>[note] load fx channel</span><b>READY</b></p>
+      <div class="boot-screen__bar"><i></i></div>
+      <p class="boot-screen__hint">CLICK OR PRESS ANY KEY TO SKIP</p>
+    </div>
+  </div>
+
+  <header class="masthead" data-site-header></header>
+
+  <main class="page-main note-page" id="main" data-note-page>
+    <section class="note-hero">
+      <div class="note-hero__grid" aria-hidden="true"></div>
+      <div class="note-hero__glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="note-hero__inner">
+          <nav class="note-breadcrumb" aria-label="面包屑" data-note-breadcrumb>
+            <a href="index.html">首页</a>
+            <span class="sep" aria-hidden="true">/</span>
+            <a href="logs.html">日志</a>
+          </nav>
+          <div class="note-kicker" data-note-kicker></div>
+          <h1 class="note-title" data-note-title>LOADING NOTE…</h1>
+          <p class="note-summary" data-note-summary>正在从本地索引里取回这篇文章。</p>
+          <div class="note-meta" data-note-meta></div>
+          <div class="note-reactions" data-note-reactions>
+            <span class="note-reactions__stat"><b data-note-views>0</b> 阅读</span>
+            <button class="note-reactions__btn" type="button" data-note-like aria-pressed="false">
+              <span class="note-reactions__icon" aria-hidden="true">♥</span><b data-note-likes>0</b> 赞
+            </button>
+            <button class="note-reactions__btn" type="button" data-note-favorite aria-pressed="false">
+              <span class="note-reactions__icon" aria-hidden="true">☆</span><b data-note-favorites>0</b> 收藏
+            </button>
+          </div>
+          <div class="note-author">
+            <span class="catgirl-avatar catgirl-avatar--mini note-author__avatar" data-catgirl data-frame="idle" aria-hidden="true">
+              <img class="catgirl-avatar__sprite" data-catgirl-img src="assets/img/catgirl-idle.png" alt="" width="128" height="192" decoding="async">
+            </span>
+            <div class="note-author__body">
+              <b data-site-text="brand">kawaii</b><span data-site-text="role">硬件开发 / 学习者</span>
+              <p data-site-text="description">个人学习记录站。</p>
+            </div>
+            <a class="btn btn--small" href="about.html">关于作者</a>
+          </div>
+        </div>
+        <figure class="note-cover" data-note-cover hidden></figure>
+      </div>
+    </section>
+
+    <section class="container" aria-label="文章正文">
+      <div class="note-layout">
+        <div class="note-main">
+          <section class="note-map" data-note-map hidden aria-label="文章思维导图">
+            <div class="note-map__head">
+              <span>MIND MAP / 导图视图</span>
+              <span class="note-map__hint">单击选中 · 双击节点跳到对应章节 · 滚轮缩放 · 拖拽平移</span>
+              <button class="note-map__close" type="button" data-note-map-close>返回正文</button>
+            </div>
+            <div class="note-map__host" data-note-map-host></div>
+            <div class="note-map__status" data-note-map-status role="status"></div>
+          </section>
+          <div class="note-taskbar" data-note-taskbar hidden></div>
+          <article class="article" data-note-article>
+            <p>正在加载正文。如果长时间没有内容，请确认 <code>data/notes.generated.js</code> 已构建。</p>
+          </article>
+
+          <nav class="note-backlinks" data-note-backlinks hidden aria-label="反向链接">
+            <p class="note-backlinks__label">LINKED FROM / 引自这些笔记</p>
+            <ul class="note-backlinks__list" data-note-backlinks-list></ul>
+          </nav>
+
+          <footer class="note-foot">
+            <p class="note-foot__label">TAGS / 标签</p>
+            <div class="note-foot__tags" data-note-tags></div>
+          </footer>
+
+          <nav class="note-nav" aria-label="上下篇" data-note-nav></nav>
+        </div>
+
+        <aside class="note-aside" aria-label="文章目录">
+          <div class="toc">
+            <p class="toc__label">ON THIS PAGE / 目录</p>
+            <ul class="toc__list" data-toc></ul>
+            <div class="toc__foot">
+              <button type="button" data-note-map-toggle>导图视图</button>
+              <button type="button" data-copy-link>复制链接</button>
+              <button type="button" data-print-page>打印 / 存为 PDF</button>
+              <a href="logs.html">返回笔记库 <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script src="data/site.js" defer></script>
+  <script src="data/notes.generated.js" defer></script>
+  <script src="assets/js/theme.js" defer></script>
+  <script src="assets/js/motion.js" defer></script>
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/ai.js" defer></script>
+  <script src="assets/js/agent.js" defer></script>
+  <script src="assets/js/ambient.js" defer></script>
+  <script src="assets/js/linefield.js" defer></script>
+  <script src="assets/js/terminal.js" defer></script>
+  <script src="assets/js/note-code.js" defer></script>
+  <script src="assets/js/note-diagram.js" defer></script>
+  <script src="assets/js/note-lab.js" defer></script>
+  <script src="assets/js/cover-template.js" defer></script>
+  <script src="assets/js/mindmap.js" defer></script>
+  <script src="assets/js/metrics.js" defer></script>
+  <script src="assets/js/catgirl-avatar.js" defer></script>
+  <script src="assets/js/note.js" defer></script>
+  <script src="assets/js/cover-fx.js" defer></script>
+</body>
+</html>

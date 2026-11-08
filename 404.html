@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-skin="pixel" data-fx="on">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>404 / SIGNAL LOST · kawaii / STUDY OS</title>
+  <meta name="description" content="页面没有找到。信号丢失，但笔记还在。">
+  <meta name="theme-color" content="#0b0616">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/terminal.css">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add("js");
+      try {
+        var skin = localStorage.getItem("kawaii.skin.v1");
+        if (skin === "pixel" || skin === "line") root.setAttribute("data-skin", skin);
+        root.setAttribute("data-fx", localStorage.getItem("kawaii.fx.v1") === "off" ? "off" : "on");
+        var daynight = localStorage.getItem("kawaii.daynight.v1");
+        var hour = new Date().getHours();
+        root.setAttribute("data-daynight", (daynight === "day" || daynight === "night") ? daynight : (hour >= 6 && hour < 18 ? "day" : "night"));
+        var motion = localStorage.getItem("kawaii.motion.v1");
+        if (motion === "full" || motion === "reduced") root.setAttribute("data-motion", motion);
+      } catch (error) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/daynight.css">
+</head>
+<body id="top" data-page="notfound">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="masthead" data-site-header></header>
+
+  <main class="page-main" id="main">
+    <section class="error-page">
+      <div class="container">
+        <div class="error-grid">
+          <div>
+            <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>SIGNAL LOST / 请求的地址不存在</p>
+            <p class="error-code" aria-hidden="true">404</p>
+            <h1 class="error-title">这页掉进噪声里了。</h1>
+            <p class="error-text">你要找的地址没有对应的文件，或者它已经被移动、重命名。别急，笔记和日志都还在。</p>
+            <div class="error-actions">
+              <a class="btn btn--primary" href="index.html">回到首页 <span aria-hidden="true">→</span></a>
+              <a class="btn" href="write.html">打开写作台</a>
+              <a class="btn btn--ghost" href="logs.html">翻阅笔记库</a>
+            </div>
+          </div>
+
+          <div class="error-console" role="img" aria-label="终端报错：404 file not found">
+            <div class="error-console__bar">
+              <span class="console-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+              <span>kawaii@study: ~/404</span>
+            </div>
+            <div class="error-console__body">
+              <p>$ open &lt;requested-path&gt;</p>
+              <p><span class="err">ERR 404 — FILE NOT FOUND</span></p>
+              <p><span class="err">the requested note is not in the build index.</span></p>
+              <p>$ hint --available</p>
+              <p><span class="ok">→ run index.html to reboot the system.</span></p>
+              <p><span class="ok">→ run write.html to open the desk.</span></p>
+              <p>$ <span class="t-cursor" aria-hidden="true">_</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script src="data/site.js" defer></script>
+  <script src="data/notes.generated.js" defer></script>
+  <script src="assets/js/theme.js" defer></script>
+  <script src="assets/js/motion.js" defer></script>
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/ai.js" defer></script>
+  <script src="assets/js/agent.js" defer></script>
+  <script src="assets/js/ambient.js" defer></script>
+  <script src="assets/js/linefield.js" defer></script>
+  <script src="assets/js/terminal.js" defer></script>
+</body>
+</html>

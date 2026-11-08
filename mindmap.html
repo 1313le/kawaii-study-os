@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-skin="pixel" data-fx="on">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>思维导图 · kawaii / STUDY OS</title>
+  <meta name="description" content="把 Markdown 笔记折叠成一张可缩放、可折叠、可导出的思维导图。">
+  <meta name="theme-color" content="#0b0616">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/mindmap.css">
+  <link rel="stylesheet" href="assets/css/terminal.css">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add("js");
+      try {
+        var skin = localStorage.getItem("kawaii.skin.v1");
+        if (skin === "pixel" || skin === "line") root.setAttribute("data-skin", skin);
+        root.setAttribute("data-fx", localStorage.getItem("kawaii.fx.v1") === "off" ? "off" : "on");
+        var daynight = localStorage.getItem("kawaii.daynight.v1");
+        var hour = new Date().getHours();
+        root.setAttribute("data-daynight", (daynight === "day" || daynight === "night") ? daynight : (hour >= 6 && hour < 18 ? "day" : "night"));
+        var motion = localStorage.getItem("kawaii.motion.v1");
+        if (motion === "full" || motion === "reduced") root.setAttribute("data-motion", motion);
+        if (!sessionStorage.getItem("kawaii.booted")) root.classList.add("boot-on");
+      } catch (error) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/daynight.css">
+</head>
+<body id="top" data-page="map">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <div class="boot-screen" id="boot-screen" aria-hidden="true">
+    <div class="boot-screen__box">
+      <p class="boot-screen__brand">kawaii / STUDY OS<br>MIND MAP</p>
+      <p class="boot-screen__line" style="--i:0"><span>[map] load markdown</span><b>OK</b></p>
+      <p class="boot-screen__line" style="--i:1"><span>[map] fold headings into a tree</span><b>OK</b></p>
+      <p class="boot-screen__line" style="--i:2"><span>[map] open canvas</span><b>READY</b></p>
+      <div class="boot-screen__bar"><i></i></div>
+      <p class="boot-screen__hint">CLICK OR PRESS ANY KEY TO SKIP</p>
+    </div>
+  </div>
+
+  <header class="masthead" data-site-header></header>
+
+  <main class="page-main" id="main">
+    <section class="page-hero">
+      <div class="container">
+        <div class="page-hero__inner">
+          <div>
+            <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>MIND MAP / Markdown 的另一种视图</p>
+            <h1 class="page-hero__title">思维<em>导图</em></h1>
+            <p class="page-hero__lede">Markdown 是唯一的事实源，导图只是把它折叠成一张可以缩放、折叠和导出的树。选一篇笔记，或者直接把想法贴进左边的源文。</p>
+          </div>
+          <div class="page-hero__meta">
+            <p class="page-hero__stat"><strong data-map-nodes>0</strong> NODES</p>
+            <p class="page-hero__stat"><strong data-map-depth>0</strong> LEVELS</p>
+            <p class="page-hero__stat"><strong>2</strong> SIDES</p>
+          </div>
+        </div>
+        <div class="page-hero__strip">
+          <span>HEADINGS BECOME BRANCHES</span>
+          <span class="sep" aria-hidden="true">/</span>
+          <span>CLICK TO SELECT · DOUBLE-CLICK TO LOCATE</span>
+          <span class="sep" aria-hidden="true">/</span>
+          <span>SCROLL TO ZOOM · DRAG TO PAN</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight" aria-label="思维导图工作台">
+      <div class="container">
+        <div class="map-toolbar">
+          <label class="map-toolbar__note">载入笔记
+            <select data-map-note>
+              <option value="">— 选择一篇 —</option>
+            </select>
+          </label>
+          <button class="btn btn--small" type="button" data-map-expand>展开全部</button>
+          <button class="btn btn--small" type="button" data-map-collapse>折叠到二级</button>
+          <button class="btn btn--small" type="button" data-map-reset>重置视图</button>
+          <button class="btn btn--small" type="button" data-map-embed>复制嵌入片段</button>
+          <button class="btn btn--small" type="button" data-map-svg>导出 SVG</button>
+          <button class="btn btn--small" type="button" data-map-png>导出 PNG</button>
+        </div>
+
+        <div class="map-workspace">
+          <div class="map-source">
+            <div class="map-source__head">
+              <span>SOURCE / Markdown</span>
+              <button class="map-source__toggle" type="button" data-map-source-toggle>收起</button>
+            </div>
+            <textarea class="map-source__input" data-map-source spellcheck="false" placeholder="# 一级标题&#10;&#10;## 分支&#10;&#10;- 一条想法&#10;- 另一条想法"></textarea>
+            <p class="map-source__hint">标题会成为分支，列表项会成为叶子；双击节点可定位到对应的一行。</p>
+          </div>
+          <div class="map-canvas">
+            <div class="map-canvas__host" data-map-host></div>
+            <div class="map-canvas__empty" data-map-empty>选一篇笔记，或在左边贴上 Markdown。</div>
+            <div class="map-canvas__status" data-map-status role="status"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script src="data/site.js" defer></script>
+  <script src="data/notes.generated.js" defer></script>
+  <script src="assets/js/theme.js" defer></script>
+  <script src="assets/js/motion.js" defer></script>
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/ai.js" defer></script>
+  <script src="assets/js/agent.js" defer></script>
+  <script src="assets/js/ambient.js" defer></script>
+  <script src="assets/js/linefield.js" defer></script>
+  <script src="assets/js/terminal.js" defer></script>
+  <script src="assets/js/mindmap.js" defer></script>
+  <script src="assets/js/mindmap-page.js" defer></script>
+</body>
+</html>
